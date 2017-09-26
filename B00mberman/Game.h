@@ -2,6 +2,7 @@
 #include <SFML\Graphics.hpp>
 #include "GameStateManager.h"
 #include "SplashScreen.h"
+
 class Game
 {
 private:
