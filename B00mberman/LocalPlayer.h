@@ -6,7 +6,6 @@ class LocalPlayer :
 	public AbstractPlayer
 {
 private:
-	Direction direction = NONE;
 	sf::Vector2f scheduledPosition;
 	void tryToMoveAndSchedulePosition(Direction direction);
 

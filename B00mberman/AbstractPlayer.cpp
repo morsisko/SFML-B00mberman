@@ -13,6 +13,44 @@ int AbstractPlayer::getTileRowFromApperance(PlayerAppearance playerAppearance)
 	return 0;
 }
 
+void AbstractPlayer::initializeAnimations()
+{
+	int tile = getTileRowFromApperance(playerAppearance);
+
+	for (auto& frameNumber : FRONT_ANIMATION_INDEXES)
+	{
+		downAnimation.addFrame(sf::IntRect(Game::TILE_SIZE * frameNumber, tile * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE));
+	}
+
+	for (auto& frameNumber : BOTTOM_ANIMATION_INDEXES)
+	{
+		upAnimation.addFrame(sf::IntRect(Game::TILE_SIZE * frameNumber, tile * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE));
+	}
+
+	for (auto& frameNumber : SIDE_ANIMATION_INDEXES)
+	{
+		rightAnimation.addFrame(sf::IntRect(Game::TILE_SIZE * frameNumber, tile * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE));
+		leftAnimation.addFrame(sf::IntRect(Game::TILE_SIZE * frameNumber, tile * Game::TILE_SIZE, -Game::TILE_SIZE, Game::TILE_SIZE));
+	}
+}
+
+void AbstractPlayer::setAnimationFromDirection()
+{
+	if (direction == UP)
+		currentAnimation = upAnimation;
+
+	else if (direction == DOWN)
+		currentAnimation = downAnimation;
+
+	else if (direction == LEFT)
+		currentAnimation = leftAnimation;
+
+	else if (direction == RIGHT)
+		currentAnimation = rightAnimation;
+
+	currentAnimation.reset();
+}
+
 void AbstractPlayer::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(sprite, states);
@@ -26,7 +64,13 @@ bool AbstractPlayer::collide(const sf::FloatRect & position)
 		level.isPointCollidable(position.left, position.top + position.height - 1));
 }
 
-AbstractPlayer::AbstractPlayer(sf::Texture & texture, Level & level, sf::Vector2i position, PlayerAppearance playerAppearance) : level(level)
+AbstractPlayer::AbstractPlayer(sf::Texture & texture, Level & level, sf::Vector2i position, PlayerAppearance playerAppearance) : level(level),
+	playerAppearance(playerAppearance),
+	upAnimation(FRAME_TIME),
+	downAnimation(FRAME_TIME),
+	leftAnimation(FRAME_TIME),
+	rightAnimation(FRAME_TIME),
+	currentAnimation(downAnimation)
 {
 	sprite.setTexture(texture);
 	int textureRow = getTileRowFromApperance(playerAppearance);
@@ -37,6 +81,8 @@ AbstractPlayer::AbstractPlayer(sf::Texture & texture, Level & level, sf::Vector2
 	
 	float scale = Game::DISPLAY_TILE_SIZE / static_cast<float>(Game::TILE_SIZE);
 	sprite.setScale(scale, scale);
+
+	initializeAnimations();
 }
 
 AbstractPlayer::~AbstractPlayer()

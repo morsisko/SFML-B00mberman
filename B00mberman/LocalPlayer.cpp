@@ -28,8 +28,11 @@ void LocalPlayer::tryToMoveAndSchedulePosition(Direction direction)
 	}
 
 	sf::Vector2i nextPosition = level.getLogicPositionFromRealPosition(globalBounds.left, globalBounds.top);
-	scheduledPosition = level.getRealPositionFromLogicPosition(nextPosition.x, nextPosition.y);
+	scheduledPosition = level.getRealPositionFromLogicPosition(nextPosition.x, nextPosition.y);	
+	Direction oldDirection = this->direction;
 	this->direction = direction;
+	if (oldDirection != direction)
+		setAnimationFromDirection();
 }
 
 LocalPlayer::LocalPlayer(sf::Texture& texture, Level& level, sf::Vector2i position, PlayerAppearance playerAppearance) :
@@ -42,7 +45,11 @@ void LocalPlayer::update(const sf::Time & deltaTime)
 	handleInput();
 
 	if (direction == NONE)
+	{
+		if (!currentAnimation.isFirstFrame())
+			currentAnimation.update(deltaTime, sprite);
 		return;
+	}
 
 	float deltaAsSeconds = deltaTime.asSeconds();
 	sf::Vector2f position = sprite.getPosition();
@@ -83,6 +90,9 @@ void LocalPlayer::update(const sf::Time & deltaTime)
 			direction = NONE;
 		}
 	}
+
+	currentAnimation.update(deltaTime, sprite);
+
 }
 
 void LocalPlayer::handleInput()
