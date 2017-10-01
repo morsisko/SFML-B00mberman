@@ -127,10 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AbstractPlayer.cpp" />
+    <ClCompile Include="AssetsManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="LocalPlayer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="SimpleButton.cpp" />
@@ -138,10 +141,13 @@
     <ClCompile Include="State.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AbstractPlayer.h" />
+    <ClInclude Include="AssetsManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateManager.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LocalPlayer.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="SimpleButton.h" />
     <ClInclude Include="SplashScreen.h" />

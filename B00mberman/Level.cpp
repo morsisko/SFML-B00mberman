@@ -1,4 +1,5 @@
 #include "Level.h"
+#include "Game.h"
 
 
 
@@ -28,10 +29,8 @@ TileType Level::intToTileType(int type)
 	return static_cast<TileType>(type);
 }
 
-Level::Level()
+Level::Level(sf::Texture &texture) : texture(texture)
 {
-	texture.loadFromFile("assets/tile.png");
-
 	vertex.setPrimitiveType(sf::Quads);
 	vertex.resize(MAP_WIDTH * MAP_HEIGHT * 4);
 }
@@ -53,9 +52,14 @@ bool Level::isValidPosition(int x, int y)
 	return x < MAP_WIDTH && x >= 0 && y < MAP_HEIGHT && y >= 0;
 }
 
-bool Level::isNonCollidable(int x, int y)
+bool Level::isPointCollidable(float x, float y)
 {
-	return isValidPosition(x, y) && logicArray[y][x] == GRASS || logicArray[y][x] == DIRT;
+	return isLogicPointCollidable(getLogicPositionFromRealPosition(x, y));
+}
+
+bool Level::isLogicPointCollidable(sf::Vector2i position)
+{
+	return !(isValidPosition(position.x, position.y) && logicArray[position.y][position.x] == GRASS || logicArray[position.y][position.x] == DIRT);
 }
 
 void Level::setTileAsType(int x, int y, TileType tileType)
@@ -68,16 +72,26 @@ void Level::setTileAsType(int x, int y, TileType tileType)
 	sf::Vertex* quad = &vertex[(x + y * MAP_WIDTH) * 4];
 
 	// define its 4 corners
-	quad[0].position = sf::Vector2f(x * DISPLAY_TILE_SIZE, y * DISPLAY_TILE_SIZE);
-	quad[1].position = sf::Vector2f((x + 1) * DISPLAY_TILE_SIZE, y * DISPLAY_TILE_SIZE);
-	quad[2].position = sf::Vector2f((x + 1) * DISPLAY_TILE_SIZE, (y + 1) * DISPLAY_TILE_SIZE);
-	quad[3].position = sf::Vector2f(x * DISPLAY_TILE_SIZE, (y + 1) * DISPLAY_TILE_SIZE);
+	quad[0].position = sf::Vector2f(x * Game::DISPLAY_TILE_SIZE, y * Game::DISPLAY_TILE_SIZE);
+	quad[1].position = sf::Vector2f((x + 1) * Game::DISPLAY_TILE_SIZE, y * Game::DISPLAY_TILE_SIZE);
+	quad[2].position = sf::Vector2f((x + 1) * Game::DISPLAY_TILE_SIZE, (y + 1) * Game::DISPLAY_TILE_SIZE);
+	quad[3].position = sf::Vector2f(x * Game::DISPLAY_TILE_SIZE, (y + 1) * Game::DISPLAY_TILE_SIZE);
 
 	// define its 4 texture coordinates
-	quad[0].texCoords = sf::Vector2f(fillTexture.x * TILE_SIZE, fillTexture.y * TILE_SIZE);
-	quad[1].texCoords = sf::Vector2f((fillTexture.x + 1) * TILE_SIZE, fillTexture.y * TILE_SIZE);
-	quad[2].texCoords = sf::Vector2f((fillTexture.x + 1) * TILE_SIZE, (fillTexture.y + 1) * TILE_SIZE);
-	quad[3].texCoords = sf::Vector2f(fillTexture.x * TILE_SIZE, (fillTexture.y + 1) * TILE_SIZE);
+	quad[0].texCoords = sf::Vector2f(fillTexture.x * Game::TILE_SIZE, fillTexture.y * Game::TILE_SIZE);
+	quad[1].texCoords = sf::Vector2f((fillTexture.x + 1) * Game::TILE_SIZE, fillTexture.y * Game::TILE_SIZE);
+	quad[2].texCoords = sf::Vector2f((fillTexture.x + 1) * Game::TILE_SIZE, (fillTexture.y + 1) * Game::TILE_SIZE);
+	quad[3].texCoords = sf::Vector2f(fillTexture.x * Game::TILE_SIZE, (fillTexture.y + 1) * Game::TILE_SIZE);
+}
+
+sf::Vector2f Level::getRealPositionFromLogicPosition(int x, int y)
+{
+	return sf::Vector2f(x * Game::DISPLAY_TILE_SIZE, y * Game::DISPLAY_TILE_SIZE);
+}
+
+sf::Vector2i Level::getLogicPositionFromRealPosition(float x, float y)
+{
+	return sf::Vector2i(floor(x / static_cast<float>(Game::DISPLAY_TILE_SIZE)), floor(y / static_cast<float>(Game::DISPLAY_TILE_SIZE)));
 }
 
 

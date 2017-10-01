@@ -16,11 +16,7 @@ private:
 	static const int MAP_HEIGHT = 13;
 	static const int MAP_WIDTH = 15;
 	sf::VertexArray vertex;
-	sf::Texture texture;
-
-	static const int TILE_SIZE = 16;
-	static const int DISPLAY_TILE_SIZE = 48;
-
+	sf::Texture& texture;
 
 	std::array<std::array<TileType, MAP_WIDTH>, MAP_HEIGHT> logicArray;
 
@@ -29,11 +25,14 @@ private:
 	sf::Vector2i getTileIndexFromTileType(TileType type);
 	TileType intToTileType(int type);
 public:
-	Level();
+	Level(sf::Texture& texture);
 	void load(std::array<std::array<int, MAP_WIDTH>, MAP_HEIGHT>& levelData);
 	bool isValidPosition(int x, int y);
-	bool isNonCollidable(int x, int y);
+	bool isPointCollidable(float x, float y);
+	bool isLogicPointCollidable(sf::Vector2i position);
 	void setTileAsType(int x, int y, TileType tileType);
+	sf::Vector2f getRealPositionFromLogicPosition(int x, int y);
+	sf::Vector2i getLogicPositionFromRealPosition(float x, float y);
 	~Level();
 };
 

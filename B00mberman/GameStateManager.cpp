@@ -26,6 +26,11 @@ void GameStateManager::setState(std::unique_ptr<State> state)
 	currentState = std::move(state);
 }
 
+AssetsManager & GameStateManager::getAssets()
+{
+	return assetsManager;
+}
+
 
 GameStateManager::~GameStateManager()
 {
