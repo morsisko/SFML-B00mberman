@@ -130,6 +130,7 @@
     <ClCompile Include="AbstractPlayer.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AssetsManager.cpp" />
+    <ClCompile Include="Bomb.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="AbstractPlayer.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AssetsManager.h" />
+    <ClInclude Include="Bomb.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateManager.h" />

@@ -1,12 +1,15 @@
 #include "Animation.h"
 
-Animation::Animation(int frameTime) : frameTime(frameTime)
+Animation::Animation(int frameTime, bool looped) : frameTime(frameTime), looped(looped)
 {
 	;
 }
 
 void Animation::update(const sf::Time & time, sf::Sprite& sprite)
 {
+	if (!looped && isLastFrame())
+		return;
+
 	currentFrameTime += time.asMilliseconds();
 
 	if (currentFrameTime < frameTime)
@@ -29,6 +32,11 @@ void Animation::addFrame(sf::IntRect frame)
 bool Animation::isFirstFrame()
 {
 	return !currentFrame;
+}
+
+bool Animation::isLastFrame()
+{
+	return currentFrame + 1 >= frames.size();
 }
 
 void Animation::reset(sf::Sprite& sprite)

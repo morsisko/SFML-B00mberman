@@ -1,6 +1,8 @@
 #pragma once
 #include "SFML\Graphics.hpp"
 #include <array>
+#include <deque>
+#include "Bomb.h"
 
 enum TileType
 {
@@ -19,6 +21,7 @@ private:
 	sf::Texture& texture;
 
 	std::array<std::array<TileType, MAP_WIDTH>, MAP_HEIGHT> logicArray;
+	std::deque<Bomb> bombs;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
@@ -31,6 +34,8 @@ public:
 	bool isPointCollidable(float x, float y);
 	bool isLogicPointCollidable(sf::Vector2i position);
 	void setTileAsType(int x, int y, TileType tileType);
+	void putBomb(sf::Vector2f position);
+	void update(const sf::Time& deltaTime);
 	sf::Vector2f getRealPositionFromLogicPosition(int x, int y);
 	sf::Vector2i getLogicPositionFromRealPosition(float x, float y);
 	~Level();

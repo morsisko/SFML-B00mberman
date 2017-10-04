@@ -24,7 +24,7 @@ GameState::GameState(GameStateManager* manager, sf::RenderWindow* window) : Stat
 
 void GameState::handleEvent(const sf::Event & event)
 {
-	;
+	localPlayer.handleEvent(event);
 }
 
 void GameState::render()
@@ -36,6 +36,7 @@ void GameState::render()
 void GameState::update(const sf::Time & deltaTime)
 {
 	localPlayer.update(deltaTime);
+	level.update(deltaTime);
 }
 
 

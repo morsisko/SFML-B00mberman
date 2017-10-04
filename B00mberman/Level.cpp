@@ -7,6 +7,9 @@ void Level::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	states.texture = &texture;
 	target.draw(vertex, states);
+	
+	for (auto& bomb : bombs)
+		target.draw(bomb);
 }
 
 sf::Vector2i Level::getTileIndexFromTileType(TileType type)
@@ -82,6 +85,18 @@ void Level::setTileAsType(int x, int y, TileType tileType)
 	quad[1].texCoords = sf::Vector2f((fillTexture.x + 1) * Game::TILE_SIZE, fillTexture.y * Game::TILE_SIZE);
 	quad[2].texCoords = sf::Vector2f((fillTexture.x + 1) * Game::TILE_SIZE, (fillTexture.y + 1) * Game::TILE_SIZE);
 	quad[3].texCoords = sf::Vector2f(fillTexture.x * Game::TILE_SIZE, (fillTexture.y + 1) * Game::TILE_SIZE);
+}
+
+void Level::putBomb(sf::Vector2f position)
+{
+	sf::Vector2i logicPosition = getLogicPositionFromRealPosition(position.x, position.y);
+	bombs.push_back(Bomb(texture, logicPosition.x, logicPosition.y));
+}
+
+void Level::update(const sf::Time & deltaTime)
+{
+	for (auto& bomb : bombs)
+		bomb.update(deltaTime);
 }
 
 sf::Vector2f Level::getRealPositionFromLogicPosition(int x, int y)

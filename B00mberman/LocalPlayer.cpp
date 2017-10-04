@@ -116,6 +116,15 @@ void LocalPlayer::handleInput()
 	}
 }
 
+void LocalPlayer::handleEvent(const sf::Event & event)
+{
+	if (event.type != sf::Event::KeyReleased)
+		return;
+
+	if (event.key.code == sf::Keyboard::Space)
+		level.putBomb(sprite.getPosition());
+}
+
 
 LocalPlayer::~LocalPlayer()
 {
