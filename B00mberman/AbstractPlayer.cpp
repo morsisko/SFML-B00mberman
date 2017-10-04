@@ -30,25 +30,25 @@ void AbstractPlayer::initializeAnimations()
 	for (auto& frameNumber : SIDE_ANIMATION_INDEXES)
 	{
 		rightAnimation.addFrame(sf::IntRect(Game::TILE_SIZE * frameNumber, tile * Game::TILE_SIZE, Game::TILE_SIZE, Game::TILE_SIZE));
-		leftAnimation.addFrame(sf::IntRect(Game::TILE_SIZE * frameNumber, tile * Game::TILE_SIZE, -Game::TILE_SIZE, Game::TILE_SIZE));
+		leftAnimation.addFrame(sf::IntRect(Game::TILE_SIZE * (frameNumber + 1), tile * Game::TILE_SIZE, -Game::TILE_SIZE, Game::TILE_SIZE));
 	}
 }
 
 void AbstractPlayer::setAnimationFromDirection()
 {
 	if (direction == UP)
-		currentAnimation = upAnimation;
+		currentAnimation = &upAnimation;
 
 	else if (direction == DOWN)
-		currentAnimation = downAnimation;
+		currentAnimation = &downAnimation;
 
 	else if (direction == LEFT)
-		currentAnimation = leftAnimation;
+		currentAnimation = &leftAnimation;
 
 	else if (direction == RIGHT)
-		currentAnimation = rightAnimation;
+		currentAnimation = &rightAnimation;
 
-	currentAnimation.reset();
+	currentAnimation->reset(sprite);
 }
 
 void AbstractPlayer::draw(sf::RenderTarget & target, sf::RenderStates states) const
@@ -70,7 +70,7 @@ AbstractPlayer::AbstractPlayer(sf::Texture & texture, Level & level, sf::Vector2
 	downAnimation(FRAME_TIME),
 	leftAnimation(FRAME_TIME),
 	rightAnimation(FRAME_TIME),
-	currentAnimation(downAnimation)
+	currentAnimation(&downAnimation)
 {
 	sprite.setTexture(texture);
 	int textureRow = getTileRowFromApperance(playerAppearance);

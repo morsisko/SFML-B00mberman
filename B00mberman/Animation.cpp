@@ -31,11 +31,15 @@ bool Animation::isFirstFrame()
 	return !currentFrame;
 }
 
-void Animation::reset()
+void Animation::reset(sf::Sprite& sprite)
 {
 	currentFrameTime = 0;
 	currentFrame = 0;
+
+	if (!frames.empty())
+		sprite.setTextureRect(frames.front());
 }
+
 
 Animation::~Animation()
 {

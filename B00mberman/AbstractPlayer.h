@@ -45,7 +45,7 @@ protected:
 	Level& level;
 	float velocity = 150.0f;
 	Direction direction = NONE;
-	Animation& currentAnimation;
+	Animation* currentAnimation;
 
 	void setAnimationFromDirection();
 	bool collide(const sf::FloatRect& position);

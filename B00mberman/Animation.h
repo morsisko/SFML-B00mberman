@@ -13,7 +13,7 @@ public:
 	void update(const sf::Time& time, sf::Sprite& sprite);
 	void addFrame(sf::IntRect frame);
 	bool isFirstFrame();
-	void reset();
+	void reset(sf::Sprite& sprite);
 	~Animation();
 };
 

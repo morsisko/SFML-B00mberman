@@ -46,9 +46,7 @@ void LocalPlayer::update(const sf::Time & deltaTime)
 
 	if (direction == NONE)
 	{
-		if (!currentAnimation.isFirstFrame())
-			currentAnimation.update(deltaTime, sprite);
-		return;
+		currentAnimation->reset(sprite);
 	}
 
 	float deltaAsSeconds = deltaTime.asSeconds();
@@ -91,7 +89,7 @@ void LocalPlayer::update(const sf::Time & deltaTime)
 		}
 	}
 
-	currentAnimation.update(deltaTime, sprite);
+	currentAnimation->update(deltaTime, sprite);
 
 }
 
