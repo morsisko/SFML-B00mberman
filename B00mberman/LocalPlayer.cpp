@@ -49,12 +49,14 @@ void LocalPlayer::update(const sf::Time & deltaTime)
 		currentAnimation->reset(sprite);
 	}
 
+	sf::Vector2f position = sprite.getPosition(); // TODO: Split that position check
+
 	float deltaAsSeconds = deltaTime.asSeconds();
-	sf::Vector2f position = sprite.getPosition();
 
 	if (direction == RIGHT)
 	{
 		sprite.move(velocity * deltaAsSeconds, 0);
+		
 		if (position.x >= scheduledPosition.x)
 		{
 			sprite.setPosition(scheduledPosition.x, position.y);
@@ -64,6 +66,7 @@ void LocalPlayer::update(const sf::Time & deltaTime)
 	else if (direction == LEFT)
 	{
 		sprite.move(-velocity * deltaAsSeconds, 0);
+
 		if (position.x <= scheduledPosition.x)
 		{
 			sprite.setPosition(scheduledPosition.x, position.y);
@@ -73,6 +76,7 @@ void LocalPlayer::update(const sf::Time & deltaTime)
 	else if (direction == UP)
 	{
 		sprite.move(0, -velocity * deltaAsSeconds);
+
 		if (position.y <= scheduledPosition.y)
 		{
 			sprite.setPosition(position.x, scheduledPosition.y);
@@ -82,6 +86,7 @@ void LocalPlayer::update(const sf::Time & deltaTime)
 	else if (direction == DOWN)
 	{
 		sprite.move(0, velocity * deltaAsSeconds);
+
 		if (position.y >= scheduledPosition.y)
 		{
 			sprite.setPosition(position.x, scheduledPosition.y);
