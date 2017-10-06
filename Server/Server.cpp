@@ -16,7 +16,6 @@ void Server::checkForIncommingConnections()
 
 		sockets.push_back(std::move(player));
 		selector.add(*sockets.back());
-		std::cout << (void*)sockets.back().get() << std::endl;
 		std::cout << "[LOG]: New player joined the server" << std::endl;
 	}
 }
@@ -29,25 +28,23 @@ void Server::checkForIncommingPackets()
 
 		if (selector.isReady(*player))
 		{
-			std::cout << (void*)&player << std::endl;
 			sf::Packet packet;
 			sf::Socket::Status status = player->receive(packet);
 			if (status == sf::Socket::Disconnected)
 			{
 				selector.remove(*player);
-				sockets.erase(it);
+				it = sockets.erase(it);
 				std::cout << "Socket disconnected" << std::endl;
+				continue;
 			}
 
 			else if (status != sf::Socket::Done)
 			{
 				std::cout << "Error while reading packet" << std::endl;
-				++it;
-				continue;
 			}
 
-			++it;
 		}
+			++it;
 	}
 }
 
