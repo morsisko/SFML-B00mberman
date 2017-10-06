@@ -131,6 +131,7 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AssetsManager.cpp" />
     <ClCompile Include="Bomb.cpp" />
+    <ClCompile Include="ConnectionState.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AssetsManager.h" />
     <ClInclude Include="Bomb.h" />
+    <ClInclude Include="ConnectionState.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateManager.h" />

@@ -16,6 +16,8 @@ void Server::checkForIncommingConnections()
 
 		sockets.push_back(std::move(player));
 		selector.add(*sockets.back());
+		std::cout << (void*)sockets.back().get() << std::endl;
+		std::cout << "[LOG]: New player joined the server" << std::endl;
 	}
 }
 
@@ -23,15 +25,16 @@ void Server::checkForIncommingPackets()
 {
 	for (std::vector<std::unique_ptr<Player>>::iterator it = sockets.begin(); it != sockets.end();)
 	{
-		Player& player = **it;
+		Player* player = it->get();
 
-		if (selector.isReady(player))
+		if (selector.isReady(*player))
 		{
+			std::cout << (void*)&player << std::endl;
 			sf::Packet packet;
-			sf::Socket::Status status = player.receive(packet);
+			sf::Socket::Status status = player->receive(packet);
 			if (status == sf::Socket::Disconnected)
 			{
-				selector.remove(player);
+				selector.remove(*player);
 				sockets.erase(it);
 				std::cout << "Socket disconnected" << std::endl;
 			}

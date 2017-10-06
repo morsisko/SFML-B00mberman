@@ -30,7 +30,7 @@ void MenuState::update(const sf::Time & deltaTime)
 
 void MenuState::play()
 {
-	manager->setState(std::make_unique<GameState>(manager, window));
+	manager->setState(std::make_unique<ConnectionState>(manager, window));
 }
 
 MenuState::~MenuState()
