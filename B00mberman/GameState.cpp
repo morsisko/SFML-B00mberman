@@ -1,25 +1,14 @@
 #include "GameState.h"
 
-GameState::GameState(GameStateManager* manager, sf::RenderWindow* window) : State(manager, window),
-	level(manager->getAssets().getTileTexture()),
-	localPlayer(manager->getAssets().getTileTexture(), level, sf::Vector2i(1, 1), PlayerAppearance::BLUE_ORC)
+GameState::GameState(GameStateManager* manager, sf::RenderWindow* window, std::unique_ptr<sf::TcpSocket> server, std::array<std::array<int, Level::MAP_WIDTH>, Level::MAP_HEIGHT> &logicArray,
+	sf::Vector2i localPlayerPosition, PlayerAppearance localPlayerAppearance, 
+	sf::Vector2i netPlayerPosition, PlayerAppearance netPlayerAppearance) : State(manager, window),
+	level(manager->getAssets().getTileTexture(), logicArray),
+	networkManager(std::move(server)),
+	localPlayer(manager->getAssets().getTileTexture(), level, networkManager, localPlayerPosition, localPlayerAppearance),
+	netPlayer(manager->getAssets().getTileTexture(), level, networkManager, netPlayerPosition, netPlayerAppearance)
 {
-	std::array<std::array<int, 15>, 13> levelData{ { 
-		{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-		{ 1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1 },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-		{ 1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1 },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-		{ 1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1 },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-		{ 1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1 },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-		{ 1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1 },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-		{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-		} };
-	level.load(levelData);
+	;
 }
 
 void GameState::handleEvent(const sf::Event & event)
@@ -31,12 +20,14 @@ void GameState::render()
 {
 	window->draw(level);
 	window->draw(localPlayer);
+	window->draw(netPlayer);
 }
 
 void GameState::update(const sf::Time & deltaTime)
 {
 	localPlayer.update(deltaTime);
 	level.update(deltaTime);
+	networkManager.process();
 }
 
 

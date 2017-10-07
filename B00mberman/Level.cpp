@@ -32,13 +32,15 @@ TileType Level::intToTileType(int type)
 	return static_cast<TileType>(type);
 }
 
-Level::Level(sf::Texture &texture) : texture(texture)
+Level::Level(sf::Texture &texture, std::array<std::array<int, MAP_WIDTH>, MAP_HEIGHT>& levelData) : texture(texture)
 {
 	vertex.setPrimitiveType(sf::Quads);
 	vertex.resize(MAP_WIDTH * MAP_HEIGHT * 4);
+
+	load(levelData);
 }
 
-void Level::load(std::array<std::array<int, 15>, 13>& levelData)
+void Level::load(std::array<std::array<int, MAP_WIDTH>, MAP_HEIGHT>& levelData)
 {
 	for (int i = 0; i < MAP_WIDTH; ++i)
 	{

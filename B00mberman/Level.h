@@ -14,9 +14,11 @@ enum TileType
 
 class Level : public sf::Drawable
 {
-private:
+public:
 	static const int MAP_HEIGHT = 13;
 	static const int MAP_WIDTH = 15;
+
+private:
 	sf::VertexArray vertex;
 	sf::Texture& texture;
 
@@ -27,9 +29,9 @@ private:
 
 	sf::Vector2i getTileIndexFromTileType(TileType type);
 	TileType intToTileType(int type);
-public:
-	Level(sf::Texture& texture);
 	void load(std::array<std::array<int, MAP_WIDTH>, MAP_HEIGHT>& levelData);
+public:
+	Level(sf::Texture& texture, std::array<std::array<int, MAP_WIDTH>, MAP_HEIGHT>& levelData);
 	bool isValidPosition(int x, int y);
 	bool isPointCollidable(float x, float y);
 	bool isLogicPointCollidable(sf::Vector2i position);

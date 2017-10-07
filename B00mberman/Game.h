@@ -3,13 +3,22 @@
 #include "GameStateManager.h"
 #include "SplashScreen.h"
 
+enum ServerPackets
+{
+	INIT_GAME = 0
+};
+
+enum ClientPackets
+{
+	MOVE = 0
+};
+
 class Game
 {
 private:
 	GameStateManager manager;
 	sf::RenderWindow window;
 	sf::Clock frameClock;
-
 
 public:
 	static const int TILE_SIZE = 16;

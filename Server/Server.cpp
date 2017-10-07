@@ -8,7 +8,7 @@ void Server::checkForIncommingConnections()
 		if (listener.accept(*player) != sf::Socket::Done)
 			return;
 
-		if (sockets.size() >= 2)
+		if (sockets.size() >= MAX_PLAYERS)
 		{
 			player->disconnect();
 			return;
@@ -17,6 +17,9 @@ void Server::checkForIncommingConnections()
 		sockets.push_back(std::move(player));
 		selector.add(*sockets.back());
 		std::cout << "[LOG]: New player joined the server" << std::endl;
+
+		if (sockets.size() == MAX_PLAYERS)
+			game = std::make_unique<NetGame>(sockets.front().get(), sockets.back().get());
 	}
 }
 
@@ -30,11 +33,17 @@ void Server::checkForIncommingPackets()
 		{
 			sf::Packet packet;
 			sf::Socket::Status status = player->receive(packet);
-			if (status == sf::Socket::Disconnected)
+			if (status == sf::Socket::Done)
+			{
+				if (game)
+					game->handlePacket(packet, player);
+			}
+			else if (status == sf::Socket::Disconnected)
 			{
 				selector.remove(*player);
 				it = sockets.erase(it);
 				std::cout << "Socket disconnected" << std::endl;
+				game.reset();
 				continue;
 			}
 

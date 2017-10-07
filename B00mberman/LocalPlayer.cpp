@@ -28,16 +28,33 @@ void LocalPlayer::tryToMoveAndSchedulePosition(Direction direction)
 	}
 
 	sf::Vector2i nextPosition = level.getLogicPositionFromRealPosition(globalBounds.left, globalBounds.top);
-	scheduledPosition = level.getRealPositionFromLogicPosition(nextPosition.x, nextPosition.y);	
+	if (nextPosition != scheduledLogicPosition)
+	{
+		scheduledLogicPosition = nextPosition;
+		sendCurrentScheduledPosition();
+	}
+
+	scheduledPosition = level.getRealPositionFromLogicPosition(nextPosition.x, nextPosition.y);
+
 	Direction oldDirection = this->direction;
 	this->direction = direction;
 	if (oldDirection != direction)
 		setAnimationFromDirection();
 }
 
-LocalPlayer::LocalPlayer(sf::Texture& texture, Level& level, sf::Vector2i position, PlayerAppearance playerAppearance) :
-	AbstractPlayer(texture, level, position, playerAppearance)
+void LocalPlayer::sendCurrentScheduledPosition()
 {
+	sf::Packet packet;
+	packet << static_cast<sf::Uint8>(ClientPackets::MOVE) << static_cast<sf::Uint8>(scheduledLogicPosition.x) << static_cast<sf::Uint8>(scheduledLogicPosition.y);
+
+	networkManager.send(packet);
+}
+
+LocalPlayer::LocalPlayer(sf::Texture& texture, Level& level, NetworkManager& networkManager, sf::Vector2i position, PlayerAppearance playerAppearance) :
+	AbstractPlayer(texture, level, position, playerAppearance),
+	networkManager(networkManager)
+{
+
 }
 
 void LocalPlayer::update(const sf::Time & deltaTime)

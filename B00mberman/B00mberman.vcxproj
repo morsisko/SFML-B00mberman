@@ -139,6 +139,7 @@
     <ClCompile Include="LocalPlayer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MenuState.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="SimpleButton.cpp" />
     <ClCompile Include="SplashScreen.cpp" />
     <ClCompile Include="State.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="LocalPlayer.h" />
     <ClInclude Include="MenuState.h" />
+    <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="SimpleButton.h" />
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="State.h" />
