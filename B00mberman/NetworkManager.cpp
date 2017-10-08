@@ -19,6 +19,11 @@ void NetworkManager::process()
 		packets.pop_front();
 }
 
+bool NetworkManager::recvPacket(sf::Packet & packet)
+{
+	return server->receive(packet) == sf::Socket::Done;
+}
+
 NetworkManager::~NetworkManager()
 {
 }

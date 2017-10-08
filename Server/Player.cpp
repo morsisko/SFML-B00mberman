@@ -21,7 +21,7 @@ void Player::setPosition(sf::Vector2i position)
 	this->position = position;
 }
 
-const sf::Vector2i & Player::getPosition(sf::Vector2i position)
+const sf::Vector2i & Player::getPosition()
 {
 	return position;
 }
@@ -50,6 +50,14 @@ void Player::sendInitPacket(std::array<std::array<int, NetGame::MAP_WIDTH>, NetG
 
 	this->sendPacket(packet);
 
+}
+
+void Player::sendOpponentMove(Player * opponent)
+{
+	sf::Packet packet;
+	packet << static_cast<sf::Uint8>(ServerPackets::MOVE_ENEMY) << static_cast<sf::Uint8>(opponent->getPosition().x) << static_cast<sf::Uint8>(opponent->getPosition().y);
+
+	this->sendPacket(packet);
 }
 
 

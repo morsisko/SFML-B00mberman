@@ -1,6 +1,23 @@
 #include "AbstractPlayer.h"
 #include "Game.h"
 
+Animation * AbstractPlayer::getAnimationFromDirection(Direction direction)
+{
+	if (direction == UP)
+		return &upAnimation;
+
+	else if (direction == DOWN)
+		return &downAnimation;
+
+	else if (direction == LEFT)
+		return &leftAnimation;
+
+	else if (direction == RIGHT)
+		return &rightAnimation;
+
+	return nullptr;
+}
+
 int AbstractPlayer::getTileRowFromApperance(PlayerAppearance playerAppearance)
 {
 	if (playerAppearance == GREEN_ORC)
@@ -34,21 +51,71 @@ void AbstractPlayer::initializeAnimations()
 	}
 }
 
-void AbstractPlayer::setAnimationFromDirection()
+void AbstractPlayer::moveWithCurrentDirection(float deltaTime)
 {
-	if (direction == UP)
-		currentAnimation = &upAnimation;
-
-	else if (direction == DOWN)
-		currentAnimation = &downAnimation;
+	if (direction == RIGHT)
+		sprite.move(velocity * deltaTime, 0);
 
 	else if (direction == LEFT)
-		currentAnimation = &leftAnimation;
+		sprite.move(-velocity * deltaTime, 0);
 
-	else if (direction == RIGHT)
-		currentAnimation = &rightAnimation;
+	else if (direction == UP)
+		sprite.move(0, -velocity * deltaTime);
 
-	currentAnimation->reset(sprite);
+	else if (direction == DOWN)
+		sprite.move(0, velocity * deltaTime);
+}
+
+bool AbstractPlayer::checkIfScheduledPositionReached()
+{
+	sf::Vector2f position = sprite.getPosition();
+
+	if (direction == RIGHT)
+	{
+		if (position.x >= scheduledPosition.x)
+		{
+			sprite.setPosition(scheduledPosition.x, position.y);
+			return true;
+		}
+	}
+	else if (direction == LEFT)
+	{
+		if (position.x <= scheduledPosition.x)
+		{
+			sprite.setPosition(scheduledPosition.x, position.y);
+			return true;
+		}
+	}
+	else if (direction == UP)
+	{
+
+		if (position.y <= scheduledPosition.y)
+		{
+			sprite.setPosition(position.x, scheduledPosition.y);
+			return true;
+		}
+	}
+	else if (direction == DOWN)
+	{
+		if (position.y >= scheduledPosition.y)
+		{
+			sprite.setPosition(position.x, scheduledPosition.y);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void AbstractPlayer::setAnimationFromDirection()
+{
+	Animation* newAnimation = getAnimationFromDirection(direction);
+
+	if (newAnimation != currentAnimation)
+	{
+		currentAnimation = newAnimation;
+		currentAnimation->reset(sprite);
+	}
 }
 
 void AbstractPlayer::draw(sf::RenderTarget & target, sf::RenderStates states) const

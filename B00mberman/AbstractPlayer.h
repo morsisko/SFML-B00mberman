@@ -33,6 +33,7 @@ private:
 	Animation downAnimation;
 	Animation leftAnimation;
 	Animation rightAnimation;
+	Animation* getAnimationFromDirection(Direction direction);
 
 	PlayerAppearance playerAppearance;
 
@@ -46,7 +47,11 @@ protected:
 	float velocity = 150.0f;
 	Direction direction = NONE;
 	Animation* currentAnimation;
+	sf::Vector2i scheduledLogicPosition;
+	sf::Vector2f scheduledPosition;
 
+	void moveWithCurrentDirection(float deltaTime);
+	bool checkIfScheduledPositionReached();
 	void setAnimationFromDirection();
 	bool collide(const sf::FloatRect& position);
 public:

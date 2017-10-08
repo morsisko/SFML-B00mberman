@@ -12,6 +12,7 @@ public:
 	NetworkManager(std::unique_ptr<sf::TcpSocket> server);
 	void send(sf::Packet& packet);
 	void process();
+	bool recvPacket(sf::Packet& packet);
 	~NetworkManager();
 };
 

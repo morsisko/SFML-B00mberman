@@ -4,6 +4,9 @@
 
 void LocalPlayer::tryToMoveAndSchedulePosition(Direction direction)
 {
+	if (direction == NONE)
+		return;
+
 	sf::FloatRect globalBounds = sprite.getGlobalBounds();
 	if (direction == RIGHT)
 	{
@@ -23,9 +26,7 @@ void LocalPlayer::tryToMoveAndSchedulePosition(Direction direction)
 	}
 
 	if (collide(globalBounds))
-	{
 		return;
-	}
 
 	sf::Vector2i nextPosition = level.getLogicPositionFromRealPosition(globalBounds.left, globalBounds.top);
 	if (nextPosition != scheduledLogicPosition)
@@ -35,11 +36,8 @@ void LocalPlayer::tryToMoveAndSchedulePosition(Direction direction)
 	}
 
 	scheduledPosition = level.getRealPositionFromLogicPosition(nextPosition.x, nextPosition.y);
-
-	Direction oldDirection = this->direction;
 	this->direction = direction;
-	if (oldDirection != direction)
-		setAnimationFromDirection();
+	setAnimationFromDirection();
 }
 
 void LocalPlayer::sendCurrentScheduledPosition()
@@ -59,92 +57,59 @@ LocalPlayer::LocalPlayer(sf::Texture& texture, Level& level, NetworkManager& net
 
 void LocalPlayer::update(const sf::Time & deltaTime)
 {
-	handleInput();
+	tryToMoveAndSchedulePosition(lastKeyPressed);
 
 	if (direction == NONE)
 	{
 		currentAnimation->reset(sprite);
 	}
-
-	sf::Vector2f position = sprite.getPosition(); // TODO: Split that position check
-
-	float deltaAsSeconds = deltaTime.asSeconds();
-
-	if (direction == RIGHT)
+	else
 	{
-		sprite.move(velocity * deltaAsSeconds, 0);
-		
-		if (position.x >= scheduledPosition.x)
-		{
-			sprite.setPosition(scheduledPosition.x, position.y);
+		float deltaAsSeconds = deltaTime.asSeconds();
+		moveWithCurrentDirection(deltaAsSeconds);
+		if (checkIfScheduledPositionReached())
 			direction = NONE;
-		}
-	}
-	else if (direction == LEFT)
-	{
-		sprite.move(-velocity * deltaAsSeconds, 0);
-
-		if (position.x <= scheduledPosition.x)
-		{
-			sprite.setPosition(scheduledPosition.x, position.y);
-			direction = NONE;
-		}
-	}
-	else if (direction == UP)
-	{
-		sprite.move(0, -velocity * deltaAsSeconds);
-
-		if (position.y <= scheduledPosition.y)
-		{
-			sprite.setPosition(position.x, scheduledPosition.y);
-			direction = NONE;
-		}
-	}
-	else if (direction == DOWN)
-	{
-		sprite.move(0, velocity * deltaAsSeconds);
-
-		if (position.y >= scheduledPosition.y)
-		{
-			sprite.setPosition(position.x, scheduledPosition.y);
-			direction = NONE;
-		}
+		else
+			currentAnimation->update(deltaTime, sprite);
 	}
 
-	currentAnimation->update(deltaTime, sprite);
-
-}
-
-void LocalPlayer::handleInput()
-{
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-	{
-		tryToMoveAndSchedulePosition(RIGHT);
-	}
-
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-	{
-		tryToMoveAndSchedulePosition(LEFT);
-	}
-
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-	{
-		tryToMoveAndSchedulePosition(UP);
-	}
-
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-	{
-		tryToMoveAndSchedulePosition(DOWN);
-	}
 }
 
 void LocalPlayer::handleEvent(const sf::Event & event)
 {
-	if (event.type != sf::Event::KeyReleased)
-		return;
+	if (event.type == sf::Event::KeyPressed)
+	{
+		if (event.key.code == sf::Keyboard::D)
+			lastKeyPressed = RIGHT;
 
-	if (event.key.code == sf::Keyboard::Space)
-		level.putBomb(sprite.getPosition());
+		else if (event.key.code == sf::Keyboard::A)
+			lastKeyPressed = LEFT;
+
+		else if (event.key.code == sf::Keyboard::S)
+			lastKeyPressed = DOWN;
+
+		else if (event.key.code == sf::Keyboard::W)
+			lastKeyPressed = UP;
+	}
+
+	else if (event.type == sf::Event::KeyReleased)
+	{
+		if (event.key.code == sf::Keyboard::D && lastKeyPressed == RIGHT)
+			lastKeyPressed = NONE;
+
+		else if (event.key.code == sf::Keyboard::A && lastKeyPressed == LEFT)
+			lastKeyPressed = NONE;
+
+		else if (event.key.code == sf::Keyboard::S && lastKeyPressed == DOWN)
+			lastKeyPressed = NONE;
+
+		else if (event.key.code == sf::Keyboard::W && lastKeyPressed == UP)
+			lastKeyPressed = NONE;
+
+		else if (event.key.code == sf::Keyboard::Space)
+			level.putBomb(sprite.getPosition());
+	}
+
 }
 
 

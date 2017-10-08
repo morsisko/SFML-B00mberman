@@ -2,6 +2,7 @@
 #include "State.h"
 #include "Level.h"
 #include "LocalPlayer.h"
+#include "NetPlayer.h"
 #include "NetworkManager.h"
 #include <array>
 
@@ -12,7 +13,10 @@ private:
 	Level level;
 	NetworkManager networkManager;
 	LocalPlayer localPlayer;
-	LocalPlayer netPlayer;
+	NetPlayer netPlayer;
+
+	void handlePackets();
+	void handleEnemyMove(sf::Packet& packet);
 public:
 	GameState(GameStateManager* manager, sf::RenderWindow* window, std::unique_ptr<sf::TcpSocket> server, std::array<std::array<int, Level::MAP_WIDTH>, Level::MAP_HEIGHT> &logicArray, 
 			sf::Vector2i localPlayerPosition, PlayerAppearance localPlayerAppearance,

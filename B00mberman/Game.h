@@ -5,7 +5,8 @@
 
 enum ServerPackets
 {
-	INIT_GAME = 0
+	INIT_GAME = 0,
+	MOVE_ENEMY
 };
 
 enum ClientPackets

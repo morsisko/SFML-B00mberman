@@ -17,7 +17,9 @@ void NetGame::handleMove(sf::Packet & packet, Player * sender)
 
 	packet >> x >> y;
 
-	std::cout << "Someone want to move to " << x << " " << y << std::endl;
+	sender->setPosition(sf::Vector2i(x, y));
+
+	getOpponent(sender)->sendOpponentMove(sender);
 
 }
 
