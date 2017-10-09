@@ -44,19 +44,7 @@ void NetPlayer::update(const sf::Time & deltaTime)
 		direction = tryGetAndSchedulePosition();
 	}
 
-	if (direction != NONE)
-	{
-		setAnimationFromDirection();
-		currentAnimation->update(deltaTime, sprite);
-		float deltaAsSeconds = deltaTime.asSeconds();
-		moveWithCurrentDirection(deltaAsSeconds);
-		if (checkIfScheduledPositionReached())
-			direction = NONE;
-	}
-	else
-	{
-		currentAnimation->reset(sprite);
-	}
+	AbstractPlayer::update(deltaTime);
 }
 
 void NetPlayer::move(sf::Vector2i nextPosition)

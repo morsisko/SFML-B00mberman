@@ -57,21 +57,12 @@ LocalPlayer::LocalPlayer(sf::Texture& texture, Level& level, NetworkManager& net
 
 void LocalPlayer::update(const sf::Time & deltaTime)
 {
-	tryToMoveAndSchedulePosition(lastKeyPressed);
-
 	if (direction == NONE)
 	{
-		currentAnimation->reset(sprite);
+		tryToMoveAndSchedulePosition(lastKeyPressed);
 	}
-	else
-	{
-		float deltaAsSeconds = deltaTime.asSeconds();
-		moveWithCurrentDirection(deltaAsSeconds);
-		if (checkIfScheduledPositionReached())
-			direction = NONE;
-		else
-			currentAnimation->update(deltaTime, sprite);
-	}
+	
+	AbstractPlayer::update(deltaTime);
 
 }
 

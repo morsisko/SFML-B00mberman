@@ -152,6 +152,22 @@ AbstractPlayer::AbstractPlayer(sf::Texture & texture, Level & level, sf::Vector2
 	initializeAnimations();
 }
 
+void AbstractPlayer::update(const sf::Time & deltaTime)
+{
+	if (direction != NONE)
+	{
+		setAnimationFromDirection();
+		currentAnimation->update(deltaTime, sprite);
+		moveWithCurrentDirection(deltaTime.asSeconds());
+		if (checkIfScheduledPositionReached())
+			direction = NONE;
+	}
+	else
+	{
+		currentAnimation->reset(sprite);
+	}
+}
+
 AbstractPlayer::~AbstractPlayer()
 {
 }

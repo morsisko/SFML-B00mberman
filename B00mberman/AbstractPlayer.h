@@ -54,9 +54,10 @@ protected:
 	bool checkIfScheduledPositionReached();
 	void setAnimationFromDirection();
 	bool collide(const sf::FloatRect& position);
-public:
+
 	AbstractPlayer(sf::Texture& texture, Level& level, sf::Vector2i position, PlayerAppearance playerAppearance);
-	virtual void update(const sf::Time& deltaTime) = 0;
+	virtual void update(const sf::Time& deltaTime);
+public:
 	~AbstractPlayer();
 };
 
