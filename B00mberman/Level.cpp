@@ -89,10 +89,9 @@ void Level::setTileAsType(int x, int y, TileType tileType)
 	quad[3].texCoords = sf::Vector2f(fillTexture.x * Game::TILE_SIZE, (fillTexture.y + 1) * Game::TILE_SIZE);
 }
 
-void Level::putBomb(sf::Vector2f position)
+void Level::putBomb(int id, sf::Vector2i position)
 {
-	sf::Vector2i logicPosition = getLogicPositionFromRealPosition(position.x, position.y);
-	bombs.push_back(Bomb(texture, logicPosition.x, logicPosition.y));
+	bombs.push_back(Bomb(texture, position.x, position.y, id));
 }
 
 void Level::update(const sf::Time & deltaTime)

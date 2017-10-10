@@ -37,13 +37,20 @@ void LocalPlayer::tryToMoveAndSchedulePosition(Direction direction)
 
 	scheduledPosition = level.getRealPositionFromLogicPosition(nextPosition.x, nextPosition.y);
 	this->direction = direction;
-	setAnimationFromDirection();
 }
 
 void LocalPlayer::sendCurrentScheduledPosition()
 {
 	sf::Packet packet;
 	packet << static_cast<sf::Uint8>(ClientPackets::MOVE) << static_cast<sf::Uint8>(scheduledLogicPosition.x) << static_cast<sf::Uint8>(scheduledLogicPosition.y);
+
+	networkManager.send(packet);
+}
+
+void LocalPlayer::sendBombRequest()
+{
+	sf::Packet packet;
+	packet << static_cast<sf::Uint8>(ClientPackets::REQUEST_BOMB);
 
 	networkManager.send(packet);
 }
@@ -98,7 +105,7 @@ void LocalPlayer::handleEvent(const sf::Event & event)
 			lastKeyPressed = NONE;
 
 		else if (event.key.code == sf::Keyboard::Space)
-			level.putBomb(sprite.getPosition());
+			sendBombRequest();
 	}
 
 }

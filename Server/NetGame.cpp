@@ -23,6 +23,15 @@ void NetGame::handleMove(sf::Packet & packet, Player * sender)
 
 }
 
+void NetGame::handleBombRequest(sf::Packet & packet, Player * sender)
+{
+	bombs.push_back(ServerBomb(currentBombId, sender->getPosition()));
+	currentBombId++;
+
+	for (auto& player : players)
+		player->sendBombInfo(bombs.back());
+}
+
 NetGame::NetGame(Player* firstPlayer, Player* secondPlayer) : players{firstPlayer, secondPlayer}
 {
 	logicArray = { {
@@ -66,6 +75,9 @@ void NetGame::handlePacket(sf::Packet& packet, Player* sender)
 
 	if (clientPacketHeader == ClientPackets::MOVE)
 		handleMove(packet, sender);
+
+	if (clientPacketHeader == ClientPackets::REQUEST_BOMB)
+		handleBombRequest(packet, sender);
 
 	else
 		std::cout << "[ERROR]: Unknown packet header " << headerNumber << std::endl;

@@ -2,16 +2,19 @@
 #include <array>
 #include "SFML\Network.hpp"
 #include <iostream>
+#include "Bomb.h"
 
 enum ServerPackets
 {
 	INIT_GAME = 0,
-	MOVE_ENEMY
+	MOVE_ENEMY,
+	PUT_BOMB
 };
 
 enum ClientPackets
 {
-	MOVE = 0
+	MOVE = 0,
+	REQUEST_BOMB
 };
 
 enum TileType
@@ -33,9 +36,12 @@ public:
 private:
 	std::array<std::array<int, MAP_WIDTH>, MAP_HEIGHT> logicArray;
 	std::array<Player*, MAX_IN_GAME> players;
+	std::vector<ServerBomb> bombs;
+	int currentBombId = 0;
 
 	Player* getOpponent(Player* player);
 	void handleMove(sf::Packet& packet, Player* sender);
+	void handleBombRequest(sf::Packet& packet, Player* sender);
 public:
 	NetGame(Player* firstPlayer, Player* secondPlayer);
 	void update(const sf::Time& deltaTime);

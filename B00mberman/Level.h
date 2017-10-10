@@ -36,7 +36,7 @@ public:
 	bool isPointCollidable(float x, float y);
 	bool isLogicPointCollidable(sf::Vector2i position);
 	void setTileAsType(int x, int y, TileType tileType);
-	void putBomb(sf::Vector2f position);
+	void putBomb(int id, sf::Vector2i position);
 	void update(const sf::Time& deltaTime);
 	sf::Vector2f getRealPositionFromLogicPosition(int x, int y);
 	sf::Vector2i getLogicPositionFromRealPosition(float x, float y);

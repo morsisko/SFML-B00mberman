@@ -12,11 +12,12 @@ private:
 	static const int FRAME_TIME = 600;
 	Animation animation;
 	sf::Sprite sprite;
+	int id;
 
 	void initAnimation();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
-	Bomb(sf::Texture& texture, int x, int y);
+	Bomb(sf::Texture& texture, int x, int y, int id);
 	void update(const sf::Time& deltaTime);
 	~Bomb();
 };

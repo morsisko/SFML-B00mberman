@@ -13,6 +13,7 @@ private:
 	NetworkManager& networkManager;
 	void tryToMoveAndSchedulePosition(Direction direction);
 	void sendCurrentScheduledPosition();
+	void sendBombRequest();
 public:
 	LocalPlayer(sf::Texture& texture, Level& level, NetworkManager& networkManager, sf::Vector2i position, PlayerAppearance playerAppearance);
 	virtual void update(const sf::Time& deltaTime) override;

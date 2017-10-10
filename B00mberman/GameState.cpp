@@ -13,6 +13,10 @@ void GameState::handlePackets()
 
 	if (header == MOVE_ENEMY)
 		handleEnemyMove(packet);
+
+	else if (header == PUT_BOMB)
+		handlePutBomb(packet);
+
 	else
 		std::cout << "[ERROR]: Unknown packet with header " << headerNumber << " has been recv" << std::endl;
 }
@@ -26,6 +30,17 @@ void GameState::handleEnemyMove(sf::Packet & packet)
 
 	netPlayer.move(sf::Vector2i(x, y));
 	std::cout << "[INFO]: Enemy move registered" << std::endl;
+}
+
+void GameState::handlePutBomb(sf::Packet & packet)
+{
+	sf::Uint32 id;
+	sf::Uint8 x;
+	sf::Uint8 y;
+
+	packet >> id >> x >> y;
+
+	level.putBomb(id, sf::Vector2i(x, y));
 }
 
 GameState::GameState(GameStateManager* manager, sf::RenderWindow* window, std::unique_ptr<sf::TcpSocket> server, std::array<std::array<int, Level::MAP_WIDTH>, Level::MAP_HEIGHT> &logicArray,

@@ -60,6 +60,15 @@ void Player::sendOpponentMove(Player * opponent)
 	this->sendPacket(packet);
 }
 
+void Player::sendBombInfo(ServerBomb & bomb)
+{
+	sf::Packet packet;
+
+	packet << static_cast<sf::Uint8>(ServerPackets::PUT_BOMB) << static_cast<sf::Uint32>(bomb.getId()) << static_cast<sf::Uint8>(bomb.getPosition().x) << static_cast<sf::Uint8>(bomb.getPosition().y);
+
+	this->sendPacket(packet);
+}
+
 
 Player::~Player()
 {

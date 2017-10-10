@@ -6,12 +6,14 @@
 enum ServerPackets
 {
 	INIT_GAME = 0,
-	MOVE_ENEMY
+	MOVE_ENEMY,
+	PUT_BOMB
 };
 
 enum ClientPackets
 {
-	MOVE = 0
+	MOVE = 0,
+	REQUEST_BOMB
 };
 
 class Game

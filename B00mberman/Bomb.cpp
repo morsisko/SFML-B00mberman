@@ -1,8 +1,10 @@
+#include "..\Server\Bomb.h"
 #include "Bomb.h"
 #include "Game.h"
 
 
-Bomb::Bomb(sf::Texture& texture, int x, int y) : animation(FRAME_TIME, false)
+Bomb::Bomb(sf::Texture& texture, int x, int y, int id) : animation(FRAME_TIME, false),
+	id(id)
 {
 	sprite.setTexture(texture);
 	initAnimation();

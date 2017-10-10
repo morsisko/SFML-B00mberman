@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML\Network.hpp>
 #include "NetGame.h"
+#include "Bomb.h"
 #include <deque>
 
 enum PlayerAppearance
@@ -23,6 +24,7 @@ public:
 
 	void sendInitPacket(std::array<std::array<int, NetGame::MAP_WIDTH>, NetGame::MAP_HEIGHT>& logicArray, Player* opponent);
 	void sendOpponentMove(Player* opponent);
+	void sendBombInfo(ServerBomb& bomb);
 
 	void setAppearance(PlayerAppearance appearance);
 	void setPosition(sf::Vector2i position);
