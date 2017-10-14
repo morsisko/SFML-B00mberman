@@ -2,6 +2,7 @@
 #include "SFML\Graphics.hpp"
 #include <array>
 #include <deque>
+#include <algorithm>
 #include "Bomb.h"
 
 enum TileType
@@ -36,8 +37,9 @@ public:
 	bool isPointCollidable(float x, float y);
 	bool isLogicPointCollidable(sf::Vector2i position);
 	void setTileAsType(int x, int y, TileType tileType);
-	void putBomb(int id, sf::Vector2i position);
+	void putBomb(int id, sf::Vector2i position, int explosionRadius);
 	void update(const sf::Time& deltaTime);
+	void explode(int id);
 	sf::Vector2f getRealPositionFromLogicPosition(int x, int y);
 	sf::Vector2i getLogicPositionFromRealPosition(float x, float y);
 	~Level();

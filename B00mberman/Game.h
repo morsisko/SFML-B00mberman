@@ -7,7 +7,8 @@ enum ServerPackets
 {
 	INIT_GAME = 0,
 	MOVE_ENEMY,
-	PUT_BOMB
+	PUT_BOMB,
+	EXPLODE
 };
 
 enum ClientPackets

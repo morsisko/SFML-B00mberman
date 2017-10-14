@@ -17,6 +17,9 @@ void GameState::handlePackets()
 	else if (header == PUT_BOMB)
 		handlePutBomb(packet);
 
+	else if (header == EXPLODE)
+		handleExplosion(packet);
+
 	else
 		std::cout << "[ERROR]: Unknown packet with header " << headerNumber << " has been recv" << std::endl;
 }
@@ -37,10 +40,20 @@ void GameState::handlePutBomb(sf::Packet & packet)
 	sf::Uint32 id;
 	sf::Uint8 x;
 	sf::Uint8 y;
+	sf::Uint8 explosionRadius;
 
-	packet >> id >> x >> y;
+	packet >> id >> x >> y >> explosionRadius;
 
-	level.putBomb(id, sf::Vector2i(x, y));
+	level.putBomb(id, sf::Vector2i(x, y), explosionRadius);
+}
+
+void GameState::handleExplosion(sf::Packet & packet)
+{
+	sf::Uint32 id;
+
+	packet >> id;
+
+	level.explode(id);
 }
 
 GameState::GameState(GameStateManager* manager, sf::RenderWindow* window, std::unique_ptr<sf::TcpSocket> server, std::array<std::array<int, Level::MAP_WIDTH>, Level::MAP_HEIGHT> &logicArray,

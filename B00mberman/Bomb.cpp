@@ -3,8 +3,9 @@
 #include "Game.h"
 
 
-Bomb::Bomb(sf::Texture& texture, int x, int y, int id) : animation(FRAME_TIME, false),
-	id(id)
+Bomb::Bomb(sf::Texture& texture, int x, int y, int id, int explosionRadius) : animation(FRAME_TIME, false),
+	id(id),
+	explosionRadius(explosionRadius)
 {
 	sprite.setTexture(texture);
 	initAnimation();
@@ -20,6 +21,10 @@ void Bomb::update(const sf::Time & deltaTime)
 	animation.update(deltaTime, sprite);
 }
 
+int Bomb::getId()
+{
+	return id;
+}
 
 void Bomb::initAnimation()
 {

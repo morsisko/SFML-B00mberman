@@ -17,6 +17,8 @@ private:
 	std::deque<sf::Packet> packetsQueue;
 	PlayerAppearance appearance;
 	sf::Vector2i position;
+	int bombExplosionRadius = 1;
+
 	void sendPacket(sf::Packet& packet);
 public:
 	Player();
@@ -25,10 +27,13 @@ public:
 	void sendInitPacket(std::array<std::array<int, NetGame::MAP_WIDTH>, NetGame::MAP_HEIGHT>& logicArray, Player* opponent);
 	void sendOpponentMove(Player* opponent);
 	void sendBombInfo(ServerBomb& bomb);
+	void sendExplosionInfo(ServerBomb& bomb);
 
 	void setAppearance(PlayerAppearance appearance);
 	void setPosition(sf::Vector2i position);
 	const sf::Vector2i& getPosition();
+
+	int getBombExplosionRadius();
 
 	~Player();
 };

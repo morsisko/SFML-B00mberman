@@ -78,8 +78,12 @@ void Server::start(int port)
 		{
 			checkForIncommingConnections();
 			checkForIncommingPackets();
-			processPackets();
 		}
+
+		processPackets();
+
+		if (game)
+			game->update(clock.restart());
 	}
 
 }

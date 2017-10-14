@@ -89,15 +89,27 @@ void Level::setTileAsType(int x, int y, TileType tileType)
 	quad[3].texCoords = sf::Vector2f(fillTexture.x * Game::TILE_SIZE, (fillTexture.y + 1) * Game::TILE_SIZE);
 }
 
-void Level::putBomb(int id, sf::Vector2i position)
+void Level::putBomb(int id, sf::Vector2i position, int explosionRadius)
 {
-	bombs.push_back(Bomb(texture, position.x, position.y, id));
+	bombs.push_back(Bomb(texture, position.x, position.y, id, explosionRadius));
+	std::cout << "[LOG] Bomb with id " << id << " has been put" << std::endl;
 }
 
 void Level::update(const sf::Time & deltaTime)
 {
 	for (auto& bomb : bombs)
 		bomb.update(deltaTime);
+}
+
+void Level::explode(int id)
+{
+	auto iterator = std::remove_if(bombs.begin(), bombs.end(), [id](Bomb& bomb) { return bomb.getId() == id; });
+
+	if (iterator == bombs.end())
+		std::cout << "[ERROR]: Couldn't explode bomb with id " << id << std::endl;
+
+	bombs.erase(iterator, bombs.end());
+	std::cout << "[LOG]: Deleted bomb with id " << id << std::endl;
 }
 
 sf::Vector2f Level::getRealPositionFromLogicPosition(int x, int y)

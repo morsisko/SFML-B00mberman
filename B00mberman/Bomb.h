@@ -13,12 +13,14 @@ private:
 	Animation animation;
 	sf::Sprite sprite;
 	int id;
+	int explosionRadius;
 
 	void initAnimation();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
-	Bomb(sf::Texture& texture, int x, int y, int id);
+	Bomb(sf::Texture& texture, int x, int y, int id, int explosionRadius);
 	void update(const sf::Time& deltaTime);
+	int getId();
 	~Bomb();
 };
 

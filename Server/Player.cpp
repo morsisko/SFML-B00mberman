@@ -26,6 +26,11 @@ const sf::Vector2i & Player::getPosition()
 	return position;
 }
 
+int Player::getBombExplosionRadius()
+{
+	return bombExplosionRadius;
+}
+
 void Player::processPackets()
 {
 	if (packetsQueue.empty())
@@ -63,8 +68,16 @@ void Player::sendOpponentMove(Player * opponent)
 void Player::sendBombInfo(ServerBomb & bomb)
 {
 	sf::Packet packet;
+	packet << static_cast<sf::Uint8>(ServerPackets::PUT_BOMB) << static_cast<sf::Uint32>(bomb.getId()) << static_cast<sf::Uint8>(bomb.getPosition().x) << static_cast<sf::Uint8>(bomb.getPosition().y)
+			<< static_cast<sf::Uint8>(bomb.getExplosionRadius());
 
-	packet << static_cast<sf::Uint8>(ServerPackets::PUT_BOMB) << static_cast<sf::Uint32>(bomb.getId()) << static_cast<sf::Uint8>(bomb.getPosition().x) << static_cast<sf::Uint8>(bomb.getPosition().y);
+	this->sendPacket(packet);
+}
+
+void Player::sendExplosionInfo(ServerBomb & bomb)
+{
+	sf::Packet packet;
+	packet << static_cast<sf::Uint8>(ServerPackets::EXPLODE) << static_cast<sf::Uint32>(bomb.getId());
 
 	this->sendPacket(packet);
 }
