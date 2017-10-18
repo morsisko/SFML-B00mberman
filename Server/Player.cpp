@@ -31,6 +31,11 @@ int Player::getBombExplosionRadius()
 	return bombExplosionRadius;
 }
 
+int Player::getMaxBombs()
+{
+	return maxBombs;
+}
+
 void Player::processPackets()
 {
 	if (packetsQueue.empty())

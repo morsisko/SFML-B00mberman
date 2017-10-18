@@ -49,6 +49,7 @@ private:
 	bool isProtected(int x, int y);
 	std::vector<sf::Vector2i> gatherFreePositions();
 	void shufflePositions(std::vector<sf::Vector2i> &v);
+	int calculateBombAmountByPlayer(Player* player);
 	Player* getOpponent(Player* player);
 	void handleMove(sf::Packet& packet, Player* sender);
 	void handleBombRequest(sf::Packet& packet, Player* sender);

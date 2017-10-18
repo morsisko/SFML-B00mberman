@@ -18,6 +18,7 @@ private:
 	PlayerAppearance appearance;
 	sf::Vector2i position;
 	int bombExplosionRadius = 1;
+	int maxBombs = 2;
 
 	void sendPacket(sf::Packet& packet);
 public:
@@ -35,6 +36,7 @@ public:
 	const sf::Vector2i& getPosition();
 
 	int getBombExplosionRadius();
+	int getMaxBombs();
 
 	~Player();
 };

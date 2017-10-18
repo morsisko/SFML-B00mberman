@@ -36,6 +36,11 @@ void NetGame::shufflePositions(std::vector<sf::Vector2i>& v)
 	std::shuffle(v.begin(), v.end(), g);
 }
 
+int NetGame::calculateBombAmountByPlayer(Player * player)
+{
+	return std::count_if(bombs.begin(), bombs.end(), [player](ServerBomb& bomb) {return bomb.getOwner() == player; });
+}
+
 Player * NetGame::getOpponent(Player * player)
 {
 	if (players.front() == player)
@@ -65,6 +70,9 @@ void NetGame::handleMove(sf::Packet & packet, Player * sender)
 
 void NetGame::handleBombRequest(sf::Packet & packet, Player * sender)
 {
+	if (calculateBombAmountByPlayer(sender) >= sender->getMaxBombs())
+		return;
+
 	bombs.push_back(ServerBomb(currentBombId, sender->getPosition(), sender));
 	currentBombId++;
 
