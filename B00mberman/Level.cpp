@@ -22,6 +22,9 @@ sf::Vector2i Level::getTileIndexFromTileType(TileType type)
 
 	else if (type == SPACE_BLOCK)
 		return sf::Vector2i(10, 4);
+
+	else if (type == BOX)
+		return sf::Vector2i(9, 0);
 	
 	return sf::Vector2i(0, 0);
 	

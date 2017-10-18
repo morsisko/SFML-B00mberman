@@ -19,6 +19,7 @@ private:
 	void handleEnemyMove(sf::Packet& packet);
 	void handlePutBomb(sf::Packet& packet);
 	void handleExplosion(sf::Packet& packet);
+	void handleTp(sf::Packet& packet);
 public:
 	GameState(GameStateManager* manager, sf::RenderWindow* window, std::unique_ptr<sf::TcpSocket> server, std::array<std::array<int, Level::MAP_WIDTH>, Level::MAP_HEIGHT> &logicArray, 
 			sf::Vector2i localPlayerPosition, PlayerAppearance localPlayerAppearance,

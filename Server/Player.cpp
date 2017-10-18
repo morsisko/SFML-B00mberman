@@ -82,6 +82,14 @@ void Player::sendExplosionInfo(ServerBomb & bomb)
 	this->sendPacket(packet);
 }
 
+void Player::sendTp(sf::Vector2i position)
+{
+	sf::Packet packet;
+	packet << static_cast<sf::Uint8>(ServerPackets::TP) << static_cast<sf::Uint8>(position.x) << static_cast<sf::Uint8>(position.y);
+
+	this->sendPacket(packet);
+}
+
 
 Player::~Player()
 {

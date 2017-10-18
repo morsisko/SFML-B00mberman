@@ -10,7 +10,8 @@ enum TileType
 	GRASS = 0,
 	BORDER_BLOCK,
 	SPACE_BLOCK,
-	DIRT
+	DIRT,
+	BOX
 };
 
 class Level : public sf::Drawable

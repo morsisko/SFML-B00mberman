@@ -49,7 +49,7 @@ void ConnectionState::tryToConnect(const sf::Time& deltaTime)
 
 	else
 	{
-		sf::Socket::Status status = socket->connect(sf::IpAddress::LocalHost, 1337);
+		sf::Socket::Status status = socket->connect("192.168.1.100", 25565);
 
 		if (status == sf::Socket::Done)
 		{

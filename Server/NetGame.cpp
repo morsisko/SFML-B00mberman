@@ -2,6 +2,40 @@
 #include "Player.h"
 
 
+bool NetGame::canWalkOnTile(int x, int y)
+{
+	return logicArray[y][x] == DIRT || logicArray[y][x] == GRASS;
+}
+
+bool NetGame::isProtected(int x, int y)
+{
+	for (auto& position : protectedPositions)
+		if (position.x == x && position.y == y)
+			return true;
+
+	return false;
+}
+
+std::vector<sf::Vector2i> NetGame::gatherFreePositions()
+{
+	std::vector<sf::Vector2i> results;
+
+	for (int x = 0; x < MAP_WIDTH; ++x)
+		for (int y = 0; y < MAP_HEIGHT; ++y)
+			if (logicArray[y][x] == GRASS && !isProtected(x, y))
+				results.push_back(sf::Vector2i(x, y));
+
+	return results;
+}
+
+void NetGame::shufflePositions(std::vector<sf::Vector2i>& v)
+{
+	std::random_device rd;
+	std::mt19937 g(rd());
+
+	std::shuffle(v.begin(), v.end(), g);
+}
+
 Player * NetGame::getOpponent(Player * player)
 {
 	if (players.front() == player)
@@ -17,9 +51,15 @@ void NetGame::handleMove(sf::Packet & packet, Player * sender)
 
 	packet >> x >> y;
 
-	sender->setPosition(sf::Vector2i(x, y));
+	if (!canWalkOnTile(x, y))
+		sender->sendTp(sender->getPosition());
 
-	getOpponent(sender)->sendOpponentMove(sender);
+	else
+	{
+		sender->setPosition(sf::Vector2i(x, y));
+		getOpponent(sender)->sendOpponentMove(sender);
+	}
+
 
 }
 
@@ -55,6 +95,17 @@ NetGame::NetGame(Player* firstPlayer, Player* secondPlayer) : players{firstPlaye
 
 	secondPlayer->setAppearance(GREEN_ORC);
 	secondPlayer->setPosition(sf::Vector2i(2, 1));
+
+	std::vector<sf::Vector2i> freePositions = gatherFreePositions();
+	std::cout << "[LOG]: Gathered positions: " << freePositions.size() << std::endl;
+
+	shufflePositions(freePositions);
+
+	for (int i = 0; i < MAX_BOXES && i < freePositions.size(); ++i)
+	{
+		sf::Vector2i &currentPosition = freePositions.at(i);
+		logicArray[currentPosition.y][currentPosition.x] = static_cast<int>(TileType::BOX);
+	}
 
 	for (auto& player : players)
 		player->sendInitPacket(logicArray, getOpponent(player));

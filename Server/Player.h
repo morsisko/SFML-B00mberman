@@ -28,6 +28,7 @@ public:
 	void sendOpponentMove(Player* opponent);
 	void sendBombInfo(ServerBomb& bomb);
 	void sendExplosionInfo(ServerBomb& bomb);
+	void sendTp(sf::Vector2i position);
 
 	void setAppearance(PlayerAppearance appearance);
 	void setPosition(sf::Vector2i position);

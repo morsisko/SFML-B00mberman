@@ -110,6 +110,15 @@ void LocalPlayer::handleEvent(const sf::Event & event)
 
 }
 
+void LocalPlayer::tp(int x, int y)
+{
+	direction = NONE;
+	lastKeyPressed = NONE;
+	sprite.setPosition(level.getRealPositionFromLogicPosition(x, y));
+	scheduledLogicPosition.x = x;
+	scheduledLogicPosition.y = y;
+}
+
 
 LocalPlayer::~LocalPlayer()
 {

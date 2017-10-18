@@ -20,6 +20,9 @@ void GameState::handlePackets()
 	else if (header == EXPLODE)
 		handleExplosion(packet);
 
+	else if (header == TP)
+		handleTp(packet);
+
 	else
 		std::cout << "[ERROR]: Unknown packet with header " << headerNumber << " has been recv" << std::endl;
 }
@@ -32,7 +35,6 @@ void GameState::handleEnemyMove(sf::Packet & packet)
 	packet >> x >> y;
 
 	netPlayer.move(sf::Vector2i(x, y));
-	std::cout << "[INFO]: Enemy move registered" << std::endl;
 }
 
 void GameState::handlePutBomb(sf::Packet & packet)
@@ -54,6 +56,17 @@ void GameState::handleExplosion(sf::Packet & packet)
 	packet >> id;
 
 	level.explode(id);
+}
+
+void GameState::handleTp(sf::Packet & packet)
+{
+	sf::Uint8 x;
+	sf::Uint8 y;
+
+	packet >> x >> y;
+
+	localPlayer.tp(x, y);
+	std::cout << "[LOG]: Player has been tp" << std::endl;
 }
 
 GameState::GameState(GameStateManager* manager, sf::RenderWindow* window, std::unique_ptr<sf::TcpSocket> server, std::array<std::array<int, Level::MAP_WIDTH>, Level::MAP_HEIGHT> &logicArray,
