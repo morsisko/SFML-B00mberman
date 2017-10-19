@@ -39,12 +39,15 @@ public:
 	static const int MAX_IN_GAME = 2;
 	static const int MAX_BOXES = 15;
 	const std::array<sf::Vector2i, 6> protectedPositions = { sf::Vector2i(1, 1), sf::Vector2i(2, 1), sf::Vector2i(1, 2), sf::Vector2i(13, 11), sf::Vector2i(13, 10), sf::Vector2i(12, 11)};
+	const std::array<sf::Vector2i, 4> directions = { sf::Vector2i(-1, 0), sf::Vector2i(0, -1), sf::Vector2i(1, 0), sf::Vector2i(0, 1) };
+
 private:
 	std::array<std::array<int, MAP_WIDTH>, MAP_HEIGHT> logicArray;
 	std::array<Player*, MAX_IN_GAME> players;
 	std::vector<ServerBomb> bombs;
 	int currentBombId = 0;
 
+	bool isValidPosition(int x, int y);
 	bool canWalkOnTile(int x, int y);
 	bool isProtected(int x, int y);
 	std::vector<sf::Vector2i> gatherFreePositions();

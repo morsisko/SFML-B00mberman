@@ -2,9 +2,14 @@
 #include "Player.h"
 
 
+bool NetGame::isValidPosition(int x, int y)
+{
+	return (x >= 0 && x < MAP_WIDTH && y >= 0 && y < MAP_HEIGHT);
+}
+
 bool NetGame::canWalkOnTile(int x, int y)
 {
-	return logicArray[y][x] == DIRT || logicArray[y][x] == GRASS;
+	return isValidPosition(x, y) && (logicArray[y][x] == DIRT || logicArray[y][x] == GRASS);
 }
 
 bool NetGame::isProtected(int x, int y)
