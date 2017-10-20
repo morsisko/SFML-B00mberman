@@ -52,10 +52,21 @@ void GameState::handlePutBomb(sf::Packet & packet)
 void GameState::handleExplosion(sf::Packet & packet)
 {
 	sf::Uint32 id;
+	sf::Uint8 destroyedBlocks;
 
-	packet >> id;
+	packet >> id >> destroyedBlocks;
 
-	level.explode(id);
+	std::vector<sf::Vector2i> positions;
+
+	for (int i = 0; i != destroyedBlocks; ++i)
+	{
+		sf::Uint8 x;
+		sf::Uint8 y;
+		packet >> x >> y;
+		positions.push_back(sf::Vector2i(x, y));
+	}
+
+	level.explode(id, positions);
 }
 
 void GameState::handleTp(sf::Packet & packet)

@@ -40,7 +40,7 @@ public:
 	void setTileAsType(int x, int y, TileType tileType);
 	void putBomb(int id, sf::Vector2i position, int explosionRadius);
 	void update(const sf::Time& deltaTime);
-	void explode(int id);
+	void explode(int id, std::vector<sf::Vector2i>& destroyedBlocks);
 	sf::Vector2f getRealPositionFromLogicPosition(int x, int y);
 	sf::Vector2i getLogicPositionFromRealPosition(float x, float y);
 	~Level();

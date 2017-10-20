@@ -28,7 +28,7 @@ public:
 	void sendInitPacket(std::array<std::array<int, NetGame::MAP_WIDTH>, NetGame::MAP_HEIGHT>& logicArray, Player* opponent);
 	void sendOpponentMove(Player* opponent);
 	void sendBombInfo(ServerBomb& bomb);
-	void sendExplosionInfo(ServerBomb& bomb);
+	void sendExplosionInfo(ServerBomb& bomb, std::vector<sf::Vector2i>& destroyedBlocks);
 	void sendTp(sf::Vector2i position);
 
 	void setAppearance(PlayerAppearance appearance);

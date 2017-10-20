@@ -104,8 +104,11 @@ void Level::update(const sf::Time & deltaTime)
 		bomb.update(deltaTime);
 }
 
-void Level::explode(int id)
+void Level::explode(int id, std::vector<sf::Vector2i>& destroyedBlocks)
 {
+	for (auto& block : destroyedBlocks)
+		setTileAsType(block.x, block.y, TileType::GRASS);
+
 	auto iterator = std::remove_if(bombs.begin(), bombs.end(), [id](Bomb& bomb) { return bomb.getId() == id; });
 
 	if (iterator == bombs.end())

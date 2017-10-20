@@ -79,10 +79,13 @@ void Player::sendBombInfo(ServerBomb & bomb)
 	this->sendPacket(packet);
 }
 
-void Player::sendExplosionInfo(ServerBomb & bomb)
+void Player::sendExplosionInfo(ServerBomb & bomb, std::vector<sf::Vector2i>& destroyedBlocks)
 {
 	sf::Packet packet;
-	packet << static_cast<sf::Uint8>(ServerPackets::EXPLODE) << static_cast<sf::Uint32>(bomb.getId());
+	packet << static_cast<sf::Uint8>(ServerPackets::EXPLODE) << static_cast<sf::Uint32>(bomb.getId()) << static_cast<sf::Uint8>(destroyedBlocks.size());
+
+	for (auto& block : destroyedBlocks)
+		packet << static_cast<sf::Uint8>(block.x) << static_cast<sf::Uint8>(block.y);
 
 	this->sendPacket(packet);
 }

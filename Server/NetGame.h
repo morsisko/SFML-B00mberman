@@ -50,6 +50,7 @@ private:
 	bool isValidPosition(int x, int y);
 	bool canWalkOnTile(int x, int y);
 	bool isProtected(int x, int y);
+	std::vector<sf::Vector2i> affectExplosion(ServerBomb& bomb);
 	std::vector<sf::Vector2i> gatherFreePositions();
 	void shufflePositions(std::vector<sf::Vector2i> &v);
 	int calculateBombAmountByPlayer(Player* player);
