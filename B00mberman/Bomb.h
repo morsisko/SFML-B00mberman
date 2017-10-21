@@ -21,6 +21,8 @@ public:
 	Bomb(sf::Texture& texture, int x, int y, int id, int explosionRadius);
 	void update(const sf::Time& deltaTime);
 	int getId();
+	int getRadius();
+	const sf::Vector2f getPosition();
 	~Bomb();
 };
 

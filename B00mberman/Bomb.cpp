@@ -26,6 +26,16 @@ int Bomb::getId()
 	return id;
 }
 
+int Bomb::getRadius()
+{
+	return explosionRadius;
+}
+
+const sf::Vector2f Bomb::getPosition()
+{
+	return sprite.getPosition();
+}
+
 void Bomb::initAnimation()
 {
 	for (auto& index : ANIMATION_INDEXES)

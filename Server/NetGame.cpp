@@ -28,15 +28,15 @@ std::vector<sf::Vector2i> NetGame::affectExplosion(ServerBomb & bomb)
 
 	for (auto& direction : directions)
 	{
-		sf::Vector2i position = bomb.getPosition();
-		for (int i = 0; i <= bomb.getExplosionRadius() && isValidPosition(position.x, position.y); ++i, position += direction)
+		sf::Vector2i position = bomb.getPosition() + direction;
+		for (int i = 0; i != bomb.getExplosionRadius() && isValidPosition(position.x, position.y); ++i, position += direction)
 		{
 			if (logicArray[position.y][position.x] == SPACE_BLOCK || logicArray[position.y][position.x] == BORDER_BLOCK)
 				break;
 			else if (logicArray[position.y][position.x] == BOX)
 			{
 				explodedBlocks.push_back(position);
-				logicArray[position.y][position.x] = GRASS;
+				logicArray[position.y][position.x] = DIRT;
 			}
 		}
 	}

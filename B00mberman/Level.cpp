@@ -10,6 +10,9 @@ void Level::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	
 	for (auto& bomb : bombs)
 		target.draw(bomb);
+
+	for (auto& explosion : explosions)
+		target.draw(explosion);
 }
 
 sf::Vector2i Level::getTileIndexFromTileType(TileType type)
@@ -92,6 +95,25 @@ void Level::setTileAsType(int x, int y, TileType tileType)
 	quad[3].texCoords = sf::Vector2f(fillTexture.x * Game::TILE_SIZE, (fillTexture.y + 1) * Game::TILE_SIZE);
 }
 
+void Level::setDirtNear(int x, int y, int radius)
+{
+	setTileAsType(x, y, DIRT);
+	sf::Vector2i startPosition = sf::Vector2i(x, y);
+
+	for (auto& direction : directions)
+	{
+		sf::Vector2i position = startPosition + direction;
+
+		for (int i = 0; i != radius && isValidPosition(position.x, position.y); ++i, position += direction)
+		{
+			if (isLogicPointCollidable(position))
+				break;
+
+			setTileAsType(position.x, position.y, DIRT);
+		}
+	}
+}
+
 void Level::putBomb(int id, sf::Vector2i position, int explosionRadius)
 {
 	bombs.push_back(Bomb(texture, position.x, position.y, id, explosionRadius));
@@ -102,19 +124,32 @@ void Level::update(const sf::Time & deltaTime)
 {
 	for (auto& bomb : bombs)
 		bomb.update(deltaTime);
+
+	for (auto& explosion : explosions)
+		explosion.update(deltaTime);
+
+	explosions.erase(std::remove_if(explosions.begin(), explosions.end(), [](Explosion& explosion) { return explosion.canDelete(); }), explosions.end());
 }
 
 void Level::explode(int id, std::vector<sf::Vector2i>& destroyedBlocks)
 {
-	for (auto& block : destroyedBlocks)
-		setTileAsType(block.x, block.y, TileType::GRASS);
 
-	auto iterator = std::remove_if(bombs.begin(), bombs.end(), [id](Bomb& bomb) { return bomb.getId() == id; });
+	auto iterator = std::find_if(bombs.begin(), bombs.end(), [id](Bomb& bomb) { return bomb.getId() == id; });
 
 	if (iterator == bombs.end())
+	{
 		std::cout << "[ERROR]: Couldn't explode bomb with id " << id << std::endl;
+		return;
+	}
+	sf::Vector2i bombPosition = getLogicPositionFromRealPosition(iterator->getPosition().x, iterator->getPosition().y);
+	explosions.push_back(Explosion(texture, bombPosition));
+	setDirtNear(bombPosition.x, bombPosition.y, iterator->getRadius());
 
-	bombs.erase(iterator, bombs.end());
+	for (auto& block : destroyedBlocks)
+		setTileAsType(block.x, block.y, TileType::DIRT);
+
+
+	bombs.erase(iterator);
 	std::cout << "[LOG]: Deleted bomb with id " << id << std::endl;
 }
 

@@ -17,7 +17,7 @@ private:
 	std::deque<sf::Packet> packetsQueue;
 	PlayerAppearance appearance;
 	sf::Vector2i position;
-	int bombExplosionRadius = 1;
+	int bombExplosionRadius = 2;
 	int maxBombs = 2;
 
 	void sendPacket(sf::Packet& packet);
