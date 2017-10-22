@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "Bomb.h"
 #include "Explosion.h"
+#include <memory>
 
 enum TileType
 {
@@ -28,7 +29,7 @@ private:
 
 	std::array<std::array<TileType, MAP_WIDTH>, MAP_HEIGHT> logicArray;
 	std::deque<Bomb> bombs;
-	std::vector<Explosion> explosions;
+	std::vector<std::unique_ptr<Explosion>> explosions;
 
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -36,11 +37,13 @@ private:
 	sf::Vector2i getTileIndexFromTileType(TileType type);
 	TileType intToTileType(int type);
 	void load(std::array<std::array<int, MAP_WIDTH>, MAP_HEIGHT>& levelData);
+	void initExplosion(Explosion* explosion);
 public:
 	Level(sf::Texture& texture, std::array<std::array<int, MAP_WIDTH>, MAP_HEIGHT>& levelData);
 	bool isValidPosition(int x, int y);
 	bool isPointCollidable(float x, float y);
 	bool isLogicPointCollidable(sf::Vector2i position);
+	bool isBox(int x, int y);
 	void setTileAsType(int x, int y, TileType tileType);
 	void setDirtNear(int x, int y, int radius);
 	void putBomb(int id, sf::Vector2i position, int explosionRadius);

@@ -12,7 +12,7 @@ void Level::draw(sf::RenderTarget & target, sf::RenderStates states) const
 		target.draw(bomb);
 
 	for (auto& explosion : explosions)
-		target.draw(explosion);
+		target.draw(*explosion);
 }
 
 sf::Vector2i Level::getTileIndexFromTileType(TileType type)
@@ -58,6 +58,31 @@ void Level::load(std::array<std::array<int, MAP_WIDTH>, MAP_HEIGHT>& levelData)
 	}
 }
 
+void Level::initExplosion(Explosion * explosion)
+{
+	sf::Vector2i startPosition = explosion->getPosition();
+
+	for (auto& direction : directions)
+	{
+		sf::Vector2i position = startPosition + direction;
+
+		for (int i = 1; i <= explosion->getRadius() && isValidPosition(position.x, position.y); ++i, position += direction)
+		{
+			if (isBox(position.x, position.y))
+			{
+				explosion->addExplosionTile(direction, position, true);
+				break;
+			}
+
+			else if (isLogicPointCollidable(position))
+				break;
+
+			explosion->addExplosionTile(direction, position, i == explosion->getRadius());
+
+		}
+	}
+}
+
 bool Level::isValidPosition(int x, int y)
 {
 	return x < MAP_WIDTH && x >= 0 && y < MAP_HEIGHT && y >= 0;
@@ -71,6 +96,14 @@ bool Level::isPointCollidable(float x, float y)
 bool Level::isLogicPointCollidable(sf::Vector2i position)
 {
 	return !(isValidPosition(position.x, position.y) && logicArray[position.y][position.x] == GRASS || logicArray[position.y][position.x] == DIRT);
+}
+
+bool Level::isBox(int x, int y)
+{
+	if (!isValidPosition(x, y))
+		return false;
+
+	return logicArray[y][x] == BOX;
 }
 
 void Level::setTileAsType(int x, int y, TileType tileType)
@@ -126,14 +159,13 @@ void Level::update(const sf::Time & deltaTime)
 		bomb.update(deltaTime);
 
 	for (auto& explosion : explosions)
-		explosion.update(deltaTime);
+		explosion->update(deltaTime);
 
-	explosions.erase(std::remove_if(explosions.begin(), explosions.end(), [](Explosion& explosion) { return explosion.canDelete(); }), explosions.end());
+	explosions.erase(std::remove_if(explosions.begin(), explosions.end(), [](auto& explosion) { return explosion->canDelete(); }), explosions.end());
 }
 
 void Level::explode(int id, std::vector<sf::Vector2i>& destroyedBlocks)
 {
-
 	auto iterator = std::find_if(bombs.begin(), bombs.end(), [id](Bomb& bomb) { return bomb.getId() == id; });
 
 	if (iterator == bombs.end())
@@ -142,8 +174,9 @@ void Level::explode(int id, std::vector<sf::Vector2i>& destroyedBlocks)
 		return;
 	}
 	sf::Vector2i bombPosition = getLogicPositionFromRealPosition(iterator->getPosition().x, iterator->getPosition().y);
-	explosions.push_back(Explosion(texture, bombPosition));
+	explosions.push_back(std::make_unique<Explosion>(texture, bombPosition, iterator->getRadius()));
 	setDirtNear(bombPosition.x, bombPosition.y, iterator->getRadius());
+	initExplosion(explosions.back().get());
 
 	for (auto& block : destroyedBlocks)
 		setTileAsType(block.x, block.y, TileType::DIRT);
