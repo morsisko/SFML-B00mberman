@@ -14,6 +14,15 @@ void ConnectionState::initConnection()
 	socket = std::make_unique<sf::TcpSocket>();
 	socket->setBlocking(false);
 	shouldTryToConnect = true;
+
+	std::ifstream file;
+	file.open("ip.txt");
+	file >> ip;
+	if (ip.empty())
+	{
+		std::cout << "[WARNING]: Couldn't find ip.txt, filling with localhost." << std::endl;
+		ip = "127.0.0.1";
+	}
 }
 
 void ConnectionState::centerText()
@@ -49,7 +58,7 @@ void ConnectionState::tryToConnect(const sf::Time& deltaTime)
 
 	else
 	{
-		sf::Socket::Status status = socket->connect("192.168.1.100", 25565);
+		sf::Socket::Status status = socket->connect(ip, 25565);
 
 		if (status == sf::Socket::Done)
 		{

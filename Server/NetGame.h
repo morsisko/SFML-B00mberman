@@ -30,6 +30,13 @@ enum TileType
 	BOX
 };
 
+enum PlayerGameState
+{
+	DRAW = 0,
+	WIN,
+	LOSE
+};
+
 class Player;
 class NetGame
 {
@@ -37,7 +44,7 @@ public:
 	static const int MAP_HEIGHT = 13;
 	static const int MAP_WIDTH = 15;
 	static const int MAX_IN_GAME = 2;
-	static const int MAX_BOXES = 15;
+	static const int MAX_BOXES = 50;
 	const std::array<sf::Vector2i, 6> protectedPositions = { sf::Vector2i(1, 1), sf::Vector2i(2, 1), sf::Vector2i(1, 2), sf::Vector2i(13, 11), sf::Vector2i(13, 10), sf::Vector2i(12, 11)};
 	const std::array<sf::Vector2i, 4> directions = { sf::Vector2i(-1, 0), sf::Vector2i(0, -1), sf::Vector2i(1, 0), sf::Vector2i(0, 1) };
 
@@ -46,10 +53,15 @@ private:
 	std::array<Player*, MAX_IN_GAME> players;
 	std::vector<ServerBomb> bombs;
 	int currentBombId = 0;
+	bool gameEnd = false;
 
 	bool isValidPosition(int x, int y);
 	bool canWalkOnTile(int x, int y);
 	bool isProtected(int x, int y);
+	bool isDraw();
+	void tryKillPlayersOnPosition(int x, int y);
+	TileType getTileTypeAt(int x, int y);
+	void setTileTypeAt(int x, int y, TileType tile);
 	std::vector<sf::Vector2i> affectExplosion(ServerBomb& bomb);
 	std::vector<sf::Vector2i> gatherFreePositions();
 	void shufflePositions(std::vector<sf::Vector2i> &v);
@@ -61,6 +73,7 @@ public:
 	NetGame(Player* firstPlayer, Player* secondPlayer);
 	void update(const sf::Time& deltaTime);
 	void handlePacket(sf::Packet& packet, Player* sender);
+	bool isGameEnd();
 	~NetGame();
 };
 

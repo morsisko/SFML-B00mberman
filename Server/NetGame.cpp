@@ -21,23 +21,75 @@ bool NetGame::isProtected(int x, int y)
 	return false;
 }
 
+bool NetGame::isDraw()
+{
+	if (!gameEnd)
+		return false;
+
+	bool draw = true;
+
+	for (auto& player : players)
+		if (!player->isKilled())
+			draw = false;
+
+	return draw;
+}
+
+void NetGame::tryKillPlayersOnPosition(int x, int y)
+{
+	for (auto& player : players)
+	{
+		sf::Vector2i playerPosition = player->getPosition();
+
+		if (playerPosition.x == x && playerPosition.y == y)
+		{
+			player->endLife();
+			gameEnd = true;
+		}
+	}
+}
+
+TileType NetGame::getTileTypeAt(int x, int y)
+{
+	if (!isValidPosition(x, y))
+		return SPACE_BLOCK;
+
+	return static_cast<TileType>(logicArray[y][x]);
+}
+
+void NetGame::setTileTypeAt(int x, int y, TileType tile)
+{
+	if (!isValidPosition(x, y))
+		return;
+
+	logicArray[y][x] = static_cast<int>(tile);
+}
+
 std::vector<sf::Vector2i> NetGame::affectExplosion(ServerBomb & bomb)
 {
 	bomb.explode();
 	std::vector<sf::Vector2i> explodedBlocks;
+
+	sf::Vector2i bombPosition = bomb.getPosition();
+
+	tryKillPlayersOnPosition(bombPosition.x, bombPosition.y);
 
 	for (auto& direction : directions)
 	{
 		sf::Vector2i position = bomb.getPosition() + direction;
 		for (int i = 0; i != bomb.getExplosionRadius() && isValidPosition(position.x, position.y); ++i, position += direction)
 		{
-			if (logicArray[position.y][position.x] == SPACE_BLOCK || logicArray[position.y][position.x] == BORDER_BLOCK)
+			TileType tileType = getTileTypeAt(position.x, position.y);
+			if (tileType == SPACE_BLOCK || tileType == BORDER_BLOCK)
 				break;
-			else if (logicArray[position.y][position.x] == BOX)
+
+			if (tileType == BOX)
 			{
 				explodedBlocks.push_back(position);
-				logicArray[position.y][position.x] = DIRT;
+				setTileTypeAt(position.x, position.y, DIRT);
 			}
+
+			tryKillPlayersOnPosition(position.x, position.y);
 		}
 	}
 
@@ -126,11 +178,13 @@ NetGame::NetGame(Player* firstPlayer, Player* secondPlayer) : players{firstPlaye
 		{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 		} };
 
+	std::cout << "[LOG]: Created new game instance" << std::endl;
+
 	firstPlayer->setAppearance(BLUE_ORC);
 	firstPlayer->setPosition(sf::Vector2i(1, 1));
 
 	secondPlayer->setAppearance(GREEN_ORC);
-	secondPlayer->setPosition(sf::Vector2i(2, 1));
+	secondPlayer->setPosition(sf::Vector2i(13, 11));
 
 	std::vector<sf::Vector2i> freePositions = gatherFreePositions();
 	std::cout << "[LOG]: Gathered positions: " << freePositions.size() << std::endl;
@@ -158,7 +212,7 @@ void NetGame::update(const sf::Time & deltaTime)
 			std::vector<sf::Vector2i> destroyedBlocks = affectExplosion(bomb);
 
 			for (auto& player : players)
-				player->sendExplosionInfo(bomb, destroyedBlocks);
+				player->sendExplosionInfo(bomb, destroyedBlocks, gameEnd, isDraw());
 		}
 	}
 
@@ -180,6 +234,11 @@ void NetGame::handlePacket(sf::Packet& packet, Player* sender)
 
 	else
 		std::cout << "[ERROR]: Unknown packet header " << static_cast<int>(headerNumber) << std::endl;
+}
+
+bool NetGame::isGameEnd()
+{
+	return gameEnd;
 }
 
 

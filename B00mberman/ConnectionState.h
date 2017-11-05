@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "Level.h"
 #include <SFML\Network.hpp>
+#include <fstream>
 
 class ConnectionState :
 	public State
@@ -17,6 +18,7 @@ private:
 	std::unique_ptr<sf::TcpSocket> socket;
 	bool shouldTryToConnect = false;
 	bool connected = false;
+	std::string ip;
 
 	void onMenuButtonClicked();
 	void initConnection();

@@ -21,6 +21,11 @@ void Player::setPosition(sf::Vector2i position)
 	this->position = position;
 }
 
+void Player::endLife()
+{
+	kill = true;
+}
+
 const sf::Vector2i & Player::getPosition()
 {
 	return position;
@@ -34,6 +39,11 @@ int Player::getBombExplosionRadius()
 int Player::getMaxBombs()
 {
 	return maxBombs;
+}
+
+bool Player::isKilled()
+{
+	return kill;
 }
 
 void Player::processPackets()
@@ -79,13 +89,28 @@ void Player::sendBombInfo(ServerBomb & bomb)
 	this->sendPacket(packet);
 }
 
-void Player::sendExplosionInfo(ServerBomb & bomb, std::vector<sf::Vector2i>& destroyedBlocks)
+void Player::sendExplosionInfo(ServerBomb& bomb, std::vector<sf::Vector2i>& destroyedBlocks, bool gameEnd, bool draw)
 {
 	sf::Packet packet;
 	packet << static_cast<sf::Uint8>(ServerPackets::EXPLODE) << static_cast<sf::Uint32>(bomb.getId()) << static_cast<sf::Uint8>(destroyedBlocks.size());
 
 	for (auto& block : destroyedBlocks)
 		packet << static_cast<sf::Uint8>(block.x) << static_cast<sf::Uint8>(block.y);
+
+	packet << static_cast<sf::Uint8>(gameEnd);
+
+	if (gameEnd)
+	{
+		if (draw)
+			packet << static_cast<sf::Uint8>(PlayerGameState::DRAW);
+
+		else if (kill)
+			packet << static_cast<sf::Uint8>(PlayerGameState::LOSE);
+
+		else
+			packet << static_cast<sf::Uint8>(PlayerGameState::WIN);
+	}
+
 
 	this->sendPacket(packet);
 }
@@ -98,6 +123,14 @@ void Player::sendTp(sf::Vector2i position)
 	this->sendPacket(packet);
 }
 
+
+std::string Player::getName()
+{
+	if (appearance == GREEN_ORC)
+		return "Green Orc";
+
+	return "Blue Orc";
+}
 
 Player::~Player()
 {

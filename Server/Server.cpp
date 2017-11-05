@@ -42,14 +42,14 @@ void Server::checkForIncommingPackets()
 			{
 				selector.remove(*player);
 				it = sockets.erase(it);
-				std::cout << "Socket disconnected" << std::endl;
+				std::cout << "[LOG]: Socket disconnected" << std::endl;
 				game.reset();
 				continue;
 			}
 
 			else if (status != sf::Socket::Done)
 			{
-				std::cout << "Error while reading packet" << std::endl;
+				std::cout << "[ERROR]: While reading packet" << std::endl;
 			}
 
 		}
@@ -83,7 +83,12 @@ void Server::start(int port)
 		processPackets();
 
 		if (game)
+		{
 			game->update(clock.restart());
+			
+			if (game->isGameEnd())
+				game.reset();
+		}
 	}
 
 }
