@@ -87,6 +87,7 @@ std::vector<sf::Vector2i> NetGame::affectExplosion(ServerBomb & bomb)
 			{
 				explodedBlocks.push_back(position);
 				setTileTypeAt(position.x, position.y, DIRT);
+				break;
 			}
 
 			tryKillPlayersOnPosition(position.x, position.y);
@@ -194,7 +195,7 @@ NetGame::NetGame(Player* firstPlayer, Player* secondPlayer) : players{firstPlaye
 	for (int i = 0; i < MAX_BOXES && i < freePositions.size(); ++i)
 	{
 		sf::Vector2i &currentPosition = freePositions.at(i);
-		logicArray[currentPosition.y][currentPosition.x] = static_cast<int>(TileType::BOX);
+		setTileTypeAt(currentPosition.x, currentPosition.y, TileType::BOX);
 	}
 
 	for (auto& player : players)

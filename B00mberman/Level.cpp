@@ -81,6 +81,8 @@ void Level::initExplosion(Explosion * explosion)
 
 		}
 	}
+
+	explosion->shrinkArray();
 }
 
 bool Level::isValidPosition(int x, int y)

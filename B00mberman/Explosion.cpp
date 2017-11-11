@@ -130,6 +130,11 @@ sf::Vector2i Explosion::getPosition()
 	return Level::getLogicPositionFromRealPosition(position.x, position.y);
 }
 
+void Explosion::shrinkArray()
+{
+	vertex.resize(currentSize * 4);
+}
+
 
 Explosion::~Explosion()
 {

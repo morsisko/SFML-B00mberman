@@ -38,6 +38,7 @@ public:
 	int getRadius();
 	void addExplosionTile(sf::Vector2i delta, sf::Vector2i position, bool isLast);
 	sf::Vector2i getPosition();
+	void shrinkArray();
 	~Explosion();
 };
 
