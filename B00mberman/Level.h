@@ -21,7 +21,7 @@ class Level : public sf::Drawable
 public:
 	static const int MAP_HEIGHT = 13;
 	static const int MAP_WIDTH = 15;
-	const std::array<sf::Vector2i, 4> directions = { sf::Vector2i(-1, 0), sf::Vector2i(0, -1), sf::Vector2i(1, 0), sf::Vector2i(0, 1) };
+	const std::array<sf::Vector2i, 4> directions = {{ sf::Vector2i(-1, 0), sf::Vector2i(0, -1), sf::Vector2i(1, 0), sf::Vector2i(0, 1) }};
 
 private:
 	sf::VertexArray vertex;

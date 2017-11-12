@@ -25,9 +25,9 @@ private:
 	static const int FRAME_TIME = 200;
 	static const int GREEN_ORC_TILE_ROW = 1;
 	static const int BLUE_ORC_TILE_ROW = 3;
-	static constexpr std::array<int, 3> FRONT_ANIMATION_INDEXES = { 1, 2, 3 };
-	static constexpr std::array<int, 3> BOTTOM_ANIMATION_INDEXES = { 0, 8, 9 };
-	static constexpr std::array<int, 4> SIDE_ANIMATION_INDEXES = { 4, 5, 6, 7 };
+	static constexpr std::array<int, 3> FRONT_ANIMATION_INDEXES = {{ 1, 2, 3 }};
+	static constexpr std::array<int, 3> BOTTOM_ANIMATION_INDEXES = {{ 0, 8, 9 }};
+	static constexpr std::array<int, 4> SIDE_ANIMATION_INDEXES = {{ 4, 5, 6, 7 }};
 
 	Animation upAnimation;
 	Animation downAnimation;
